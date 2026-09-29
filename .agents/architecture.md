@@ -485,6 +485,13 @@ Shared:
 
 ## Build System
 
+Android Home uses `build-home-apk.yml` to build the custom branch and upload a commit-specific APK artifact.
+`publish-home-apk.yml`, registered on default `main`, accepts successful trusted Home runs and signs their APKs
+using repository Actions Secrets. It validates the certificate, package, version, and ABI before publishing
+stable-named Release assets; README links resolve through `releases/latest/download/`.
+The publisher can reuse an existing build by run ID. Branch ownership, version rules, and recovery commands live in
+[the maintenance guide](../docs/HOME-MAINTENANCE.md#在线发布与排障).
+
 `setup.dart` is the release build orchestrator: it writes `env.json` (`APP_ENV`), activates `flutter_distributor` from
 the `chen08209/flutter_distributor` fork pinned to a `v<version>-flclash.<n>` tag (cut a new tag there and bump
 `--git-ref` when the fork changes), and leaves the Core artifacts to the build hook.

@@ -88,16 +88,34 @@ GitHub 的 Sync fork 不会自动处理定制冲突，也不会保证产物使�
 例如下一版 `v0.8.98-home.3`。GitHub Release 应标为正式发布，预发布不会被 `releases/latest` 返回。
 发布时附上固定签名的 APK；上游 `.github/release_template.md` 仍含上游下载地址，不能直接用作定制版下载页。
 home.2 已作为正式 Release 发布；应用没有自动下载安装或自动合并上游的功能。
+
+## 在线发布与排障
+
 `publish-home-apk.yml` 监听定制分支 `Build home APK` 的成功结果，在线下载该次构建产物，
 使用 Actions Secrets 中的既有首页版签名，核对证书、包名、版本和架构后自动发布 Release APK。
 工作流需同时保留在默认 `main` 分支（接收 `workflow_run` 事件）和定制分支。
 仓库 Secrets 为 `HOME_ANDROID_KEYSTORE_BASE64`、`HOME_ANDROID_SIGNING_PASSWORD`，不提交凭据文件。
-发布前必须递增 home/build 版本；若同名 tag 指向不同源码，发布拒绝覆盖。
-重试时可手动运行 `Publish home APK`，输入成功的 `Build home APK` run ID，无需重新编译。
 该流程仅接受本仓库定制分支的成功构建，不检出或运行产物中的脚本。
+
+正常发布：递增 `pubspec.yaml` 的 home 序号及 build number，再推送定制分支。
+匹配的源码变更触发编译，成功后自动签名发布；仅修改 README 或维护文档不会生成新 APK。
+发布流程不等待独立的 `build.yaml` 检查，维护者需核对同一源码提交的检查结果。
 Release 资产保持 `FlClash-home-arm64-v8a.apk`、`FlClash-home-x86_64.apk` 和 `SHA256SUMS.txt`
 命名，新版本设为 latest，使首页 `/releases/latest/download/` 直链继续有效；重试旧版本不回退 latest。
-已交付的旧 home.1 APK 尚未包含更新源修正。
+
+编译已成功而发布失败时，查看 [Publish home APK](https://github.com/Frank-jpeg/FlClash/actions/workflows/publish-home-apk.yml)
+的失败步骤。在 `main` 上手动触发，填成功构建的 run ID；例如复用 home.2：
+
+```sh
+gh workflow run publish-home-apk.yml -R Frank-jpeg/FlClash --ref main -f run_id=36576531323
+```
+
+| 失败位置 | 处理方式 |
+| --- | --- |
+| 来源校验或下载 | 确认 run 属于本仓库定制分支，编译成功且 artifact 未过期；过期才需重新编译 |
+| 签名或证书校验 | 检查上述 Secrets；使用原密钥备份恢复，不新建密钥或跳过证书校验 |
+| 同名 tag 指向不同源码 | 递增 home/build 版本后重新构建，不移动已有 Release tag |
+| 上传或发布 | 修复权限或网络后复用原 run；同一源码可重试上传 |
 
 ## 实现导航
 
@@ -111,26 +129,16 @@ Release 资产保持 `FlClash-home-arm64-v8a.apk`、`FlClash-home-x86_64.apk` �
 
 ## 验证与交接
 
-- [APK 构建](https://github.com/Frank-jpeg/FlClash/actions/runs/36564426025)成功产出 arm64 和 x86_64。
-- [自动化检查](https://github.com/Frank-jpeg/FlClash/actions/runs/36565065823)通过：Flutter 1862 项通过、
-  3 项跳过，总覆盖率 79.42%；安卓原生、Go、Rust、插件和 Windows Helper 检查通过。
-- `b9fa81d` 本地相关 Flutter 测试通过：更新/提醒等 139 项，补充启动快照、消息队列与桥接等 72 项；
-  两批包含重复测试，不相加为独立用例数。静态分析没有错误或警告，剩余一条既有 const 建议。
-- `b9fa81d` 的[完整检查](https://github.com/Frank-jpeg/FlClash/actions/runs/36574920340)通过：
+- home.2 源码 `a84c30c` 的[完整检查](https://github.com/Frank-jpeg/FlClash/actions/runs/36576531340)通过：
   Flutter 1874 项通过、3 项跳过，覆盖率 79.50%，Android、Go、Rust、插件及 Windows Helper 检查通过。
-  原 APK 构建已被 home.2 构建取代；新构建和验证分别为
-  [home.2 APK](https://github.com/Frank-jpeg/FlClash/actions/runs/36576531323)及
-  [home.2 检查](https://github.com/Frank-jpeg/FlClash/actions/runs/36576531340)。
-  home.2 完整检查已通过，APK 构建于 2026-09-29 21:52（UTC+8）成功完成。
+- [home.2 APK 构建](https://github.com/Frank-jpeg/FlClash/actions/runs/36576531323)于 2026-09-29 21:52（UTC+8）完成。
   原始 artifact 为 `11037729767`，名称 `FlClash-home-a84c30cb5b7095474ddd141d5425880ef8013f0e`。
-  Release APK 已核对构建提交、归档摘要、固定签名证书、包名及版本；设备复测由用户完成。
-- [云端签名发布](https://github.com/Frank-jpeg/FlClash/actions/runs/36581215822)已成功复用 home.2 构建，
-  两种架构的发布文件摘要与本机固定签名结果一致；tag 指向 `a84c30c`。
-  首页 ARM64 直链免登录返回 HTTP 200，文件类型为 APK；`Publish home APK` 已通过 actionlint 检查。
-- 本机有 Flutter/Android/JDK 环境；此次原生编译检查未完成，缓存的 Gradle 9.3.1 离线缺少
-  `org.gradle.kotlin.kotlin-dsl:6.4.2`，仓库所需 Gradle 9.2.1 也未完成下载。不是源码编译通过记录。
-- Windows 本地较早一次全量测试出现 6 个路径分隔符相关失败，不能称其全绿；
-  相关定制测试通过，完整 Linux CI 的通过记录见上方链接。
+- [云端签名发布](https://github.com/Frank-jpeg/FlClash/actions/runs/36581215822)手动复用上述构建成功；
+  来源、签名、包名、版本和架构检查通过，tag 指向 `a84c30c`。两种 APK 摘要与本机固定签名结果一致。
+  首页 ARM64 直链免登录返回 HTTP 200，文件类型为 APK；发布工作流已通过 actionlint。
+  自动触发绑定已配置，尚未用新的版本推送再次验证 `workflow_run` 触发链。
+- 本机相关 Flutter 测试通过；原生编译检查因 Gradle 下载或离线依赖缺失未完成。
+  本机一次全量 Flutter 测试有 Windows 路径相关失败，不能称本机全绿；详细记录留在本机交接文档。
 - MuMu 已验证安装启动、首页入口、下载管理器显示和部分快捷选择。快速保存后立即强制停止
   的一次检查没有保留所选状态，原因尚未确认，不能据此宣布名单持久化实机测试通过。
 - VPN 启动、Google Play 登录/下载、Tailscale 登录、真实 NAS 连通性尚无逐项实机通过记录。
