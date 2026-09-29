@@ -21,7 +21,7 @@ void main() {
     globalState.container = container;
     container.listen(tailscaleSettingProvider, (_, _) {});
     container.read(tailscaleSettingProvider.notifier).value =
-        const TailscaleProps(authKey: 'tskey-auth-test-placeholder');
+        const TailscaleProps(authKey: 'test-placeholder');
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
@@ -39,6 +39,7 @@ void main() {
       matching: find.byType(EditableText),
     );
     expect(tester.widget<EditableText>(keyInput).obscureText, isTrue);
+    await tester.enterText(fields.at(1), '');
     await tester.ensureVisible(fields.at(2));
     await tester.enterText(fields.at(2), '0.0.0.0/0');
     final form = tester.state<FormState>(find.byType(Form));
