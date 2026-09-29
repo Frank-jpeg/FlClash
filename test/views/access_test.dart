@@ -179,16 +179,35 @@ void main() {
       seedAccessControl(const AccessControlProps(enable: true));
       await pumpAccessView(tester);
 
-      container.read(queryProvider(QueryTag.access).notifier).value = 'chat';
+      final search = find.byType(TextField);
+      expect(search, findsOneWidget);
+      expect(tester.testTextInput.isVisible, isFalse);
+
+      await tester.enterText(search, ' Chat ');
       await tester.pump();
       expect(find.text('Chat'), findsOneWidget);
       expect(find.text('Browser'), findsNothing);
 
-      container.read(queryProvider(QueryTag.access).notifier).value =
-          'com.example.browser';
+      await tester.enterText(search, 'COM.EXAMPLE.BROWSER');
       await tester.pump();
       expect(find.text('Browser'), findsOneWidget);
       expect(find.text('Chat'), findsNothing);
+
+      await tester.tap(find.text('Browser'));
+      await tester.pump();
+      await tester.enterText(search, 'missing app');
+      await tester.pumpAndSettle();
+      expect(find.text('No data'), findsOneWidget);
+      expect(search, findsOneWidget);
+
+      await tester.tap(find.byTooltip('Clear search'));
+      await tester.pumpAndSettle();
+      expect(tester.widget<TextField>(search).controller!.text, isEmpty);
+      expect(find.text('Browser'), findsOneWidget);
+      expect(find.text('Chat'), findsOneWidget);
+      expect(container.read(accessControlStateProvider).currentList, [
+        'com.example.browser',
+      ]);
 
       await teardownView(tester);
     });

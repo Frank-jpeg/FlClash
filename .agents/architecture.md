@@ -11,6 +11,8 @@
   mark settings as applied; edits made during a handoff are compared against the submitted snapshot.
 - `lib/common/access_control.dart` keeps installed Google Play components visible through both package-filter paths.
   Saving `AccessView` deduplicates and sorts selections without deleting hidden packages.
+  Its search field stays above the scrollable list and filters labels/package names through `queryProvider(QueryTag.access)`;
+  filtering or clearing the query never changes saved selections.
 - `TailscaleProps` is part of `Config`; `tailscaleSettingProvider` participates in save, startup overrides, and restore.
   `TailscaleView` saves settings and requests `SetupAction.applyProfile`, selecting rule mode when enabled.
 - After subscription/script/custom-rule processing, `makeRealProfileTask` applies `applyTailscaleConfig` before YAML

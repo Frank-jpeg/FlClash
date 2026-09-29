@@ -20,7 +20,7 @@ class AccessView extends ConsumerStatefulWidget {
 }
 
 class _AccessViewState extends ConsumerState<AccessView> {
-  final GlobalKey<CommonScaffoldState> _scaffoldKey = GlobalKey();
+  late final TextEditingController _searchController;
   late ScrollController _controller;
   List<String>? _pinedList;
   bool _isInit = false;
@@ -31,6 +31,9 @@ class _AccessViewState extends ConsumerState<AccessView> {
   @override
   void initState() {
     super.initState();
+    _searchController = TextEditingController(
+      text: ref.read(queryProvider(QueryTag.access)),
+    );
     _controller = ScrollController();
     _completer.complete(_loadPackages());
     final accessControl = ref
@@ -97,6 +100,7 @@ class _AccessViewState extends ConsumerState<AccessView> {
 
   @override
   void dispose() {
+    _searchController.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -190,10 +194,6 @@ class _AccessViewState extends ConsumerState<AccessView> {
     ref.read(accessControlStateProvider.notifier).update((state) {
       return state.copyWith(enable: !state.enable);
     });
-  }
-
-  void _handleSearch() {
-    _scaffoldKey.currentState?.handleToSearch();
   }
 
   Future<void> _handleBack() async {
@@ -318,11 +318,6 @@ class _AccessViewState extends ConsumerState<AccessView> {
                   ? appLocalizations.turnOff
                   : appLocalizations.turnOn,
               onPressed: _handleToggle,
-            ),
-            CommonPopupMenuItem(
-              icon: Icons.search,
-              label: appLocalizations.search,
-              onPressed: _handleSearch,
             ),
             CommonPopupMenuItem(
               icon: Icons.tune,
@@ -472,6 +467,7 @@ class _AccessViewState extends ConsumerState<AccessView> {
   Widget build(BuildContext context) {
     final isLoading = ref.watch(loadingProvider(LoadingTag.access));
     final query = ref.watch(queryProvider(QueryTag.access));
+    final searchQuery = query.trim().toLowerCase();
     final packages = ref.watch(packagesProvider);
     final accessControl = ref.watch(accessControlStateProvider);
     final viewPackages = packages
@@ -483,8 +479,8 @@ class _AccessViewState extends ConsumerState<AccessView> {
         )
         .where(
           (package) =>
-              package.label.toLowerCase().contains(query) ||
-              package.packageName.contains(query),
+              package.label.toLowerCase().contains(searchQuery) ||
+              package.packageName.toLowerCase().contains(searchQuery),
         )
         .toList();
     final mode = accessControl.mode;
@@ -494,9 +490,7 @@ class _AccessViewState extends ConsumerState<AccessView> {
     final needsInstalledAppsPermission =
         packages.isEmpty && !_installedAppsPermissionGranted;
     return CommonScaffold(
-      key: _scaffoldKey,
       isLoading: isLoading,
-      searchState: AppBarSearchState(onSearch: _onSearch, autoAddSearch: false),
       title: context.appLocalizations.appAccessControl,
       actions: _buildActions(context, enable: accessControl.enable),
       body: Column(
@@ -507,7 +501,29 @@ class _AccessViewState extends ConsumerState<AccessView> {
             mode: mode,
             count: valueList.length,
           ),
-          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: TextField(
+              controller: _searchController,
+              inputFormatters: TextInputLimits.limit(TextInputLimits.search),
+              textInputAction: TextInputAction.search,
+              onChanged: _onSearch,
+              decoration: InputDecoration(
+                hintText: context.appLocalizations.search,
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: query.isEmpty
+                    ? null
+                    : IconButton(
+                        tooltip: context.appLocalizations.clearSearch,
+                        onPressed: () {
+                          _searchController.clear();
+                          _onSearch('');
+                        },
+                        icon: const Icon(Icons.close),
+                      ),
+              ),
+            ),
+          ),
           Expanded(
             child: needsInstalledAppsPermission
                 ? _buildInstalledAppsPermissionStatus()
