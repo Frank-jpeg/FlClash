@@ -66,14 +66,14 @@ on Mobile:
 
 ### Android
 
-Support the following actions
+Android Home supports these actions (the upstream app uses `com.follow.clash.action.*`):
 
    ```bash
-    com.follow.clash.action.START
+    com.follow.clash.home.action.START
     
-    com.follow.clash.action.STOP
+    com.follow.clash.home.action.STOP
     
-    com.follow.clash.action.TOGGLE
+    com.follow.clash.home.action.TOGGLE
    ```
 
 ## Download

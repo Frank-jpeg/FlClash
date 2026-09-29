@@ -2,7 +2,7 @@
 
 ## 仓库与交付基线
 
-| 项目 | 2026-09-29 核对结果 |
+| 项目 | 2026-09-30 核对结果 |
 | --- | --- |
 | Fork | `Frank-jpeg/FlClash`，公开仓库，账号拥有管理员权限 |
 | 上游 | `chen08209/FlClash` |
@@ -10,17 +10,17 @@
 | 定制分支 | `feature/android-home-tailscale` |
 | 默认分支 | `main`；首页有定制 APK 直链，尚未合入定制功能 |
 | 上游基线 | `v0.8.98`，发布于 2026-09-14 |
-| 源码应用版本 | `0.8.98-home.2+2026092902` |
-| APK versionCode | ARM64：`2026094902`；x86_64：`2026096902`（Flutter 按 ABI 加偏移） |
+| 源码应用版本 | `0.8.98-home.3+2026092903` |
+| APK versionCode | ARM64：`2026094903`；x86_64：`2026096903`（Flutter 按 ABI 加偏移） |
 | Android 包名 | `com.follow.clash.home`；debug 构建另有 `.dev` 后缀 |
-| 已发布 APK 对应代码 | `a84c30cb5b7095474ddd141d5425880ef8013f0e`（home.2） |
+| 已发布 APK 对应代码 | `24225ad0de6c7bdacdb2259f8555ca743de846d4`（home.3） |
 | 更新源修复 | `8cc4ca2`：Fork Release 地址及 home 版本比较 |
 | VPN 提醒修复 | `b9fa81d`：启动快照、双向开关提示及原生停止后重启 |
-| 新包构建提交 | `a84c30c`：递增 home/build 版本并按 SHA 命名构建产物 |
+| 新包构建提交 | `24225ad`：应用名单常驻搜索框，递增 home/build 版本 |
 
-旧 APK 对应 `552585e`，版本 `0.8.98-home.1+2026092901`。
-新版 `0.8.98-home.2+2026092902` 包含 `8cc4ca2`、`b9fa81d` 的更新源与重启提醒修正，
-已将成功的 Actions 产物用原密钥签署，发布为 [v0.8.98-home.2](https://github.com/Frank-jpeg/FlClash/releases/tag/v0.8.98-home.2)。
+home.1（`552585e`）之后，home.2 加入更新源与重启提醒修正，home.3 将应用名单搜索框常驻顶部。
+当前 [v0.8.98-home.3](https://github.com/Frank-jpeg/FlClash/releases/tag/v0.8.98-home.3)
+已由云端构建、使用原密钥签署并自动发布。
 默认分支和定制分支的中英 README 均直接链接 Release APK，无需登录 GitHub 或解压。
 Actions artifact 仍是使用临时 debug 签名的原始构建产物，与固定签名的 Release APK 分开。
 使用 `gh` 时显式指定 `-R Frank-jpeg/FlClash`，避免 Fork 环境默认查询上游仓库。
@@ -85,9 +85,9 @@ GitHub 的 Sync fork 不会自动处理定制冲突，也不会保证产物使�
 当前源码通过 `lib/common/constant.dart` 的 `repository` 统一使用 `Frank-jpeg/FlClash`，
 手动及自动检查请求 `/repos/Frank-jpeg/FlClash/releases/latest`，发现新版后打开该 Fork 的下载页。
 版本比较支持前导 `v`、`-home.N` 和数字 build number；发布时递增 home 序号和 Android build number，
-例如下一版 `v0.8.98-home.3`。GitHub Release 应标为正式发布，预发布不会被 `releases/latest` 返回。
+例如 home.3 之后使用 `v0.8.98-home.4`。GitHub Release 应标为正式发布，预发布不会被 `releases/latest` 返回。
 发布时附上固定签名的 APK；上游 `.github/release_template.md` 仍含上游下载地址，不能直接用作定制版下载页。
-home.2 已作为正式 Release 发布；应用没有自动下载安装或自动合并上游的功能。
+home.3 已作为正式 Release 发布；应用没有自动下载安装或自动合并上游的功能。
 
 ## 在线发布与排障
 
@@ -104,10 +104,10 @@ Release 资产保持 `FlClash-home-arm64-v8a.apk`、`FlClash-home-x86_64.apk` �
 命名，新版本设为 latest，使首页 `/releases/latest/download/` 直链继续有效；重试旧版本不回退 latest。
 
 编译已成功而发布失败时，查看 [Publish home APK](https://github.com/Frank-jpeg/FlClash/actions/workflows/publish-home-apk.yml)
-的失败步骤。在 `main` 上手动触发，填成功构建的 run ID；例如复用 home.2：
+的失败步骤。在 `main` 上手动触发，填成功构建的 run ID；例如复用 home.3：
 
 ```sh
-gh workflow run publish-home-apk.yml -R Frank-jpeg/FlClash --ref main -f run_id=36576531323
+gh workflow run publish-home-apk.yml -R Frank-jpeg/FlClash --ref main -f run_id=36593607481
 ```
 
 | 失败位置 | 处理方式 |
@@ -122,21 +122,25 @@ gh workflow run publish-home-apk.yml -R Frank-jpeg/FlClash --ref main -f run_id=
 状态流及路由注入位置见[架构说明](../.agents/architecture.md#android-home-customizations)。
 使用和联网前提见[使用说明](HOME-ANDROID.md)。保持以下行为：
 
-- 首页开关复用原 VPN 设置；隐藏应用的已选名单不能在保存时丢失。
+- 首页开关复用原 VPN 设置；应用名单搜索框常驻顶部，按名称或包名筛选，清空后恢复列表。
+  搜索和保存不得丢失隐藏应用的既有选择。
 - Tailscale 规则在最终覆写完成后注入，DNS policy 保留订阅原有项，节点名冲突时追加后缀。
 - 私网绕过模式下仍捕获 Tailscale 和显式子网；不添加出口节点，不允许默认路由 `/0`。
 - Android VPN 生命周期仍由原服务管理；页面“已启用”只代表配置状态。
 
 ## 验证与交接
 
-- home.2 源码 `a84c30c` 的[完整检查](https://github.com/Frank-jpeg/FlClash/actions/runs/36576531340)通过：
-  Flutter 1874 项通过、3 项跳过，覆盖率 79.50%，Android、Go、Rust、插件及 Windows Helper 检查通过。
-- [home.2 APK 构建](https://github.com/Frank-jpeg/FlClash/actions/runs/36576531323)于 2026-09-29 21:52（UTC+8）完成。
-  原始 artifact 为 `11037729767`，名称 `FlClash-home-a84c30cb5b7095474ddd141d5425880ef8013f0e`。
-- [云端签名发布](https://github.com/Frank-jpeg/FlClash/actions/runs/36581215822)手动复用上述构建成功；
-  来源、签名、包名、版本和架构检查通过，tag 指向 `a84c30c`。两种 APK 摘要与本机固定签名结果一致。
-  首页 ARM64 直链免登录返回 HTTP 200，文件类型为 APK；发布工作流已通过 actionlint。
-  自动触发绑定已配置，尚未用新的版本推送再次验证 `workflow_run` 触发链。
+- [home.3 APK 构建](https://github.com/Frank-jpeg/FlClash/actions/runs/36593607481)与
+  [自动签名发布](https://github.com/Frank-jpeg/FlClash/actions/runs/36594918515)成功，2026-09-30 00:04（UTC+8）发布。
+  来源、固定证书、包名、版本和 ABI 检查通过，tag 指向 `24225ad`；ARM64 直链免登录返回 HTTP 200、APK 类型。
+  本轮验证了推送触发构建、`workflow_run` 自动触发签名发布的完整流程。
+- home.3 的[首次完整检查](https://github.com/Frank-jpeg/FlClash/actions/runs/36593607414)：Flutter 1873 项通过、
+  3 项跳过、1 项失败；失败项是旧测试要求应用页搜索框随页面失活消失。`3cc583c` 已将其改为
+  常驻搜索及返回行为检查，本机相关 30 项通过；该提交仅改测试，APK 的应用源码与依赖完全不变。
+  同次 Android、Go、Rust、插件及 Windows Helper 检查通过；不得将首次完整检查称为全绿。
+  测试适配后的[云端复检](https://github.com/Frank-jpeg/FlClash/actions/runs/36595514462)以该 run 的最终结果为准。
+- 前一版 home.2 的[完整检查](https://github.com/Frank-jpeg/FlClash/actions/runs/36576531340)通过，
+  [云端签名发布](https://github.com/Frank-jpeg/FlClash/actions/runs/36581215822)曾手动复用成功构建完成。
 - 本机相关 Flutter 测试通过；原生编译检查因 Gradle 下载或离线依赖缺失未完成。
   本机一次全量 Flutter 测试有 Windows 路径相关失败，不能称本机全绿；详细记录留在本机交接文档。
 - MuMu 已验证安装启动、首页入口、下载管理器显示和部分快捷选择。快速保存后立即强制停止

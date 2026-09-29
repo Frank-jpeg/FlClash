@@ -66,14 +66,14 @@ on Mobile:
 
 ### Android
 
-支持下列操作
+首页版支持下列操作（上游原版使用 `com.follow.clash.action.*`）：
 
    ```bash
-    com.follow.clash.action.START
+    com.follow.clash.home.action.START
     
-    com.follow.clash.action.STOP
+    com.follow.clash.home.action.STOP
     
-    com.follow.clash.action.TOGGLE
+    com.follow.clash.home.action.TOGGLE
    ```
 
 ## Download

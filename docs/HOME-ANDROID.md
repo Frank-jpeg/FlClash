@@ -9,11 +9,11 @@
 x86_64 模拟器：[直接下载 x86_64 APK](https://github.com/Frank-jpeg/FlClash/releases/latest/download/FlClash-home-x86_64.apk)。
 无需解压或登录 GitHub；仓库首页也提供相同入口。
 
-当前发布版本为 `0.8.98-home.2+2026092902`，源码对应 `a84c30c`。Release 中的两个 APK
-沿用首页版固定签名，可覆盖此前固定签名的 home.1，通常可保留配置。首次使用需自行导入配置或订阅。
+当前发布版本为 `0.8.98-home.3+2026092903`，源码对应 `24225ad`。Release 中的两个 APK
+沿用首页版固定签名，可覆盖此前固定签名的 home.1/home.2，通常可保留配置。首次使用需自行导入配置或订阅。
 [更新记录与校验文件](https://github.com/Frank-jpeg/FlClash/releases/latest)。
 
-APK 由 [GitHub Actions 自动构建](https://github.com/Frank-jpeg/FlClash/actions/runs/36576531323)，
+APK 由 [GitHub Actions 自动构建](https://github.com/Frank-jpeg/FlClash/actions/runs/36593607481)，
 由 `Publish home APK` 在云端使用原密钥签署并自动发布到 Releases。
 Actions 中的原始 ZIP 使用临时 debug 签名，且有保存期限；日常安装请选择上述 Release APK。
 
@@ -21,8 +21,8 @@ Actions 中的原始 ZIP 使用临时 debug 签名，且有保存期限；日常
 [`feature/android-home-tailscale`](https://github.com/Frank-jpeg/FlClash/tree/feature/android-home-tailscale) 分支。
 仓库 README 中保留的原版下载链接不包含本定制功能。
 当前源码的手动、自动检查更新及更新下载页均指向本 Fork 的 GitHub Releases，支持 `-home.N`
-版本号。发现新版后打开下载页，由用户下载安装；home.2 已发布到本仓库 Releases。
-已交付的旧 APK 对应提交 `552585e`，尚未包含更新源和重启提醒修正，需要安装新 APK 后生效。
+版本号。发现新版后打开下载页，由用户下载安装。
+旧 home.1（`552585e`）不包含更新源和重启提醒修正，需通过上述 APK 直链手动升级。
 上游更新仍需合并、重新打包并使用固定签名发布，应用不会自动合并上游代码。
 构建方式及上游同步步骤见[维护说明](HOME-MAINTENANCE.md)。
 
@@ -30,7 +30,7 @@ Actions 中的原始 ZIP 使用临时 debug 签名，且有保存期限；日常
 
 首页的“应用访问控制”可直接开关，并进入应用名单。白名单模式下，选中的应用进入
 VPN；黑名单模式下，选中的应用绕过 VPN。运行中打开或关闭此功能、修改名单均需重启。
-home.2 会在存在未应用设置时显示提醒，重启提交成功或改回原设置后清除提醒；未运行时下次启动生效。
+home.2 起会在存在未应用设置时显示提醒，重启提交成功或改回原设置后清除提醒；未运行时下次启动生效。
 重启失败时保留待处理状态，允许重试。旧 home.1 需升级后获得这些修正。
 
 应用列表始终显示已安装的 Google Play 商店、Google Play 服务、Google 服务框架和
@@ -76,9 +76,9 @@ Release 编译不会自动去掉它；构建时指定 `--dart-define=APP_ENV=sta
 
 ## 验证范围
 
-home.2 对应的云端检查通过 1874 项 Flutter 测试、3 项跳过，覆盖率为 79.50%；
-安卓原生、Go、Rust、插件及 Windows Helper 检查通过，云端签名发布也已通过。
-构建、发布及验证记录见[维护说明](HOME-MAINTENANCE.md)。
+home.3 的搜索、清空、名单保存、返回操作及首页相关本机测试共 30 项通过。
+云端 APK 构建、自动签名发布及下载直链均已验证。全量检查中一项沿用旧搜索行为的测试
+已同步修改，具体检查结果与验证边界见[维护说明](HOME-MAINTENANCE.md)。
 MuMu 已完成安装、启动、首页入口显示、系统下载管理器显示及快捷选择的部分检查。
 用户已接手后续测试；尚无 VPN 启动、真实 Google Play 登录/下载、Tailscale 登录与 NAS 连通性的
 逐项实机通过记录。自动化测试通过不代表这些真实网络场景已经验证。
