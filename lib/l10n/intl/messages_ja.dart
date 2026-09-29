@@ -404,6 +404,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "go": MessageLookupByLibrary.simpleMessage("開く"),
     "goDownload": MessageLookupByLibrary.simpleMessage("ダウンロードへ"),
     "goToConfigureScript": MessageLookupByLibrary.simpleMessage("スクリプト設定へ移動"),
+    "googlePlayVpn": MessageLookupByLibrary.simpleMessage(
+      "Google Play を VPN に含める",
+    ),
+    "googlePlayVpnApplied": MessageLookupByLibrary.simpleMessage(
+      "インストール済みの Google Play、Play 開発者サービス、サービスフレームワーク、ダウンロードマネージャーを VPN 対象にしました。保存して VPN を再起動してください。購読のルールが適用されます。",
+    ),
     "hasCacheChange": MessageLookupByLibrary.simpleMessage("変更をキャッシュしますか？"),
     "helperCorruptTip": MessageLookupByLibrary.simpleMessage(
       "Helper サービスが利用できないため、TUN モードを有効にできません。FlClash を再インストールしてください。",
@@ -929,6 +935,46 @@ class MessageLookup extends MessageLookupByLibrary {
     "tab": MessageLookupByLibrary.simpleMessage("タブ"),
     "tabAnimation": MessageLookupByLibrary.simpleMessage("タブアニメーション"),
     "tabAnimationDesc": MessageLookupByLibrary.simpleMessage("モバイル表示でのみ有効です"),
+    "tailscaleApplyFailed": MessageLookupByLibrary.simpleMessage(
+      "保存しましたが設定の適用に失敗しました。確認して再試行してください。",
+    ),
+    "tailscaleAppsHint": MessageLookupByLibrary.simpleMessage(
+      "内網にアクセスするアプリを FlClash の VPN 対象に含めてください。DNS 名には完全な device.tailnet.ts.net 形式を使います。",
+    ),
+    "tailscaleAuthKey": MessageLookupByLibrary.simpleMessage("Tailscale 認証キー"),
+    "tailscaleAuthKeyHelp": MessageLookupByLibrary.simpleMessage(
+      "初回接続時に Auth Key を入力します。参加後は空欄にして端末に保存された認証情報を使用できます。",
+    ),
+    "tailscaleCreateKey": MessageLookupByLibrary.simpleMessage("認証キーを作成"),
+    "tailscaleDisabled": MessageLookupByLibrary.simpleMessage("パソコンや NAS に接続"),
+    "tailscaleEnable": MessageLookupByLibrary.simpleMessage("Tailscale を有効にする"),
+    "tailscaleEnabled": MessageLookupByLibrary.simpleMessage(
+      "有効 · プライベートネットワークに振り分け",
+    ),
+    "tailscaleHelp": MessageLookupByLibrary.simpleMessage(
+      "保存するとルールモードになります。Tailscale 宛ての通信はプライベートネットワーク、それ以外は購読のルールに従います。Tailscale 単体アプリの VPN は停止してください。",
+    ),
+    "tailscaleHostname": MessageLookupByLibrary.simpleMessage("デバイス名"),
+    "tailscaleInvalidHostname": MessageLookupByLibrary.simpleMessage(
+      "1～63 文字の英数字とハイフンを使用し、先頭と末尾は英数字にしてください。",
+    ),
+    "tailscaleInvalidKey": MessageLookupByLibrary.simpleMessage(
+      "tskey-auth- で始まる Auth Key を入力してください。",
+    ),
+    "tailscaleInvalidSubnet": MessageLookupByLibrary.simpleMessage(
+      "192.168.1.0/24 など、有効な IPv4/IPv6 CIDR を入力してください。デフォルトルートは使えません。",
+    ),
+    "tailscaleSave": MessageLookupByLibrary.simpleMessage("保存して適用"),
+    "tailscaleSaved": MessageLookupByLibrary.simpleMessage(
+      "設定を保存しました。購読設定を選び、プライベートデバイスにアクセスして接続します。",
+    ),
+    "tailscaleSubnets": MessageLookupByLibrary.simpleMessage("サブネットルート（任意）"),
+    "tailscaleSubnetsHelp": MessageLookupByLibrary.simpleMessage(
+      "Tailscale IP と完全な .ts.net 名のみの場合は空欄にします。サブネットルーターを使う場合は承認済み CIDR を 1 行ずつ入力します。",
+    ),
+    "tailscaleTitle": MessageLookupByLibrary.simpleMessage(
+      "Tailscale プライベートネットワーク",
+    ),
     "tapToAuthorize": MessageLookupByLibrary.simpleMessage("タップして許可"),
     "tcpConcurrent": MessageLookupByLibrary.simpleMessage("TCP同時接続"),
     "tcpConcurrentDesc": MessageLookupByLibrary.simpleMessage(

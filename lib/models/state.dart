@@ -202,13 +202,12 @@ extension PackageListSelectorStateExt on PackageListSelectorState {
   List<Package> get list {
     final isFilterSystemApp = accessControlProps.isFilterSystemApp;
     final isFilterNonInternetApp = accessControlProps.isFilterNonInternetApp;
-    return packages
-        .where(
-          (item) =>
-              (isFilterSystemApp ? item.system == false : true) &&
-              (isFilterNonInternetApp ? item.internet == true : true),
-        )
-        .toList();
+    return packages.getViewList(
+      pinedList: const [],
+      sortType: AccessSortType.none,
+      isFilterSystemApp: isFilterSystemApp,
+      isFilterNonInternetApp: isFilterNonInternetApp,
+    );
   }
 
   List<Package> getSortList(List<String> selectedList) {
@@ -355,6 +354,7 @@ abstract class MakeRealProfileState with _$MakeRealProfileState {
     required List<Rule> addedRules,
     required String defaultUA,
     @Default([]) List<String> authentication,
+    @Default(TailscaleProps()) TailscaleProps tailscale,
     String? matchTarget,
   }) = _MakeRealProfileState;
 }

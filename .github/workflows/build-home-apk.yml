@@ -1,0 +1,50 @@
+name: Build home APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ['feature/android-home-tailscale']
+    paths: ['lib/**', 'android/**', 'plugins/**', 'core/**', 'pubspec.*', '.github/workflows/build-home-apk.yml']
+
+concurrency:
+  group: home-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.4'
+          cache-dependency-path: core/go.sum
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.4'
+          channel: stable
+          cache: true
+      - uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r28c
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: plugins/rust_api/rust
+      - run: flutter pub get
+      - name: Build Android arm64 and x86_64
+        run: flutter build apk --release --split-per-abi --target-platform android-arm64,android-x64
+      - uses: actions/upload-artifact@v4
+        with:
+          name: FlClash-home-0.8.98
+          path: build/app/outputs/flutter-apk/*.apk
+          if-no-files-found: error

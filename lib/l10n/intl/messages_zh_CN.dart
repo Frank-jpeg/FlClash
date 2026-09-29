@@ -356,6 +356,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "go": MessageLookupByLibrary.simpleMessage("前往"),
     "goDownload": MessageLookupByLibrary.simpleMessage("前往下载"),
     "goToConfigureScript": MessageLookupByLibrary.simpleMessage("前往配置脚本"),
+    "googlePlayVpn": MessageLookupByLibrary.simpleMessage(
+      "Google Play 组件使用 VPN",
+    ),
+    "googlePlayVpnApplied": MessageLookupByLibrary.simpleMessage(
+      "已将本机 Google Play、Play 服务、服务框架和下载管理器设为使用 VPN。请保存名单并重启 VPN，实际代理仍按订阅规则处理。",
+    ),
     "hasCacheChange": MessageLookupByLibrary.simpleMessage("是否缓存修改"),
     "helperCorruptTip": MessageLookupByLibrary.simpleMessage(
       "Helper 服务不可用，无法启用 TUN 模式，请重新安装 FlClash。",
@@ -801,6 +807,42 @@ class MessageLookup extends MessageLookupByLibrary {
     "tab": MessageLookupByLibrary.simpleMessage("标签页"),
     "tabAnimation": MessageLookupByLibrary.simpleMessage("选项卡动画"),
     "tabAnimationDesc": MessageLookupByLibrary.simpleMessage("仅在移动视图中有效"),
+    "tailscaleApplyFailed": MessageLookupByLibrary.simpleMessage(
+      "设置已保存，但应用配置失败，请检查配置后重试。",
+    ),
+    "tailscaleAppsHint": MessageLookupByLibrary.simpleMessage(
+      "用于访问内网的应用必须包含在 FlClash 的 VPN 应用范围内。域名请使用完整的“设备名.网络名.ts.net”。",
+    ),
+    "tailscaleAuthKey": MessageLookupByLibrary.simpleMessage("Tailscale 授权密钥"),
+    "tailscaleAuthKeyHelp": MessageLookupByLibrary.simpleMessage(
+      "首次连接填写 Auth Key。设备加入网络后，可清空此栏，继续使用本机保存的登录身份。",
+    ),
+    "tailscaleCreateKey": MessageLookupByLibrary.simpleMessage("创建授权密钥"),
+    "tailscaleDisabled": MessageLookupByLibrary.simpleMessage("连接电脑、NAS 等内网设备"),
+    "tailscaleEnable": MessageLookupByLibrary.simpleMessage("启用 Tailscale"),
+    "tailscaleEnabled": MessageLookupByLibrary.simpleMessage("已启用 · 内网分流"),
+    "tailscaleHelp": MessageLookupByLibrary.simpleMessage(
+      "保存后切换为规则模式：Tailscale 地址走内网，其他流量沿用订阅规则。请关闭独立 Tailscale 应用的 VPN。",
+    ),
+    "tailscaleHostname": MessageLookupByLibrary.simpleMessage("设备名称"),
+    "tailscaleInvalidHostname": MessageLookupByLibrary.simpleMessage(
+      "请输入 1–63 位字母、数字或连字符，首尾需为字母或数字。",
+    ),
+    "tailscaleInvalidKey": MessageLookupByLibrary.simpleMessage(
+      "请输入以 tskey-auth- 开头的 Tailscale Auth Key。",
+    ),
+    "tailscaleInvalidSubnet": MessageLookupByLibrary.simpleMessage(
+      "请输入有效的 IPv4 或 IPv6 CIDR，例如 192.168.1.0/24；不支持默认路由。",
+    ),
+    "tailscaleSave": MessageLookupByLibrary.simpleMessage("保存并应用"),
+    "tailscaleSaved": MessageLookupByLibrary.simpleMessage(
+      "设置已保存。选好订阅配置后，访问内网设备即可发起连接。",
+    ),
+    "tailscaleSubnets": MessageLookupByLibrary.simpleMessage("子网路由（可选）"),
+    "tailscaleSubnetsHelp": MessageLookupByLibrary.simpleMessage(
+      "只访问 Tailscale IP 和完整 .ts.net 域名可留空；使用子网路由器时，填写已批准的内网网段，每行一条。",
+    ),
+    "tailscaleTitle": MessageLookupByLibrary.simpleMessage("Tailscale 内网"),
     "tapToAuthorize": MessageLookupByLibrary.simpleMessage("点击授权"),
     "tcpConcurrent": MessageLookupByLibrary.simpleMessage("TCP并发"),
     "tcpConcurrentDesc": MessageLookupByLibrary.simpleMessage("开启后允许TCP并发"),

@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:fl_clash/common/common.dart';
+import 'package:fl_clash/common/access_control.dart';
 import 'package:fl_clash/enum/enum.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -49,9 +50,11 @@ extension PackagesExt on List<Package> {
     required bool isFilterNonInternetApp,
   }) {
     return where(
-      (item) =>
-          (isFilterSystemApp ? item.system == false : true) &&
-          (isFilterNonInternetApp ? item.internet == true : true),
+      (item) => showAccessControlPackage(
+        item,
+        filterSystem: isFilterSystemApp,
+        filterOffline: isFilterNonInternetApp,
+      ),
     ).sorted((a, b) {
       final isSelectA = pinedList.contains(a.packageName);
       final isSelectB = pinedList.contains(b.packageName);

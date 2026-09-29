@@ -77,5 +77,6 @@ class BackupAction extends _$BackupAction {
     ref.read(overrideDnsProvider.notifier).value = config.overrideDns;
     ref.read(networkSettingProvider.notifier).value = config.networkProps;
     ref.read(hotKeyActionsProvider.notifier).value = config.hotKeyActions;
+    ref.read(tailscaleSettingProvider.notifier).value = config.tailscale;
   }
 }

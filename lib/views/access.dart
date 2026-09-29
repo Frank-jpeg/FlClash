@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:fl_clash/common/common.dart';
+import 'package:fl_clash/common/access_control.dart';
 import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/plugins/app.dart';
@@ -212,24 +213,8 @@ class _AccessViewState extends ConsumerState<AccessView> {
   AccessControlProps _getRealAccessControlProps(
     AccessControlProps accessControl,
   ) {
-    final packages = ref.read(packagesProvider);
-    if (packages.isEmpty) {
-      return accessControl;
-    }
-    final viewPackageNames = packages
-        .getViewList(
-          pinedList: [],
-          sortType: accessControl.sort,
-          isFilterSystemApp: accessControl.isFilterSystemApp,
-          isFilterNonInternetApp: accessControl.isFilterNonInternetApp,
-        )
-        .map((item) => item.packageName)
-        .toSet();
     return accessControl.copyWithNewList(
-      accessControl.currentList
-          .where((item) => viewPackageNames.contains(item))
-          .toList()
-        ..sort(),
+      accessControl.currentList.toSet().toList()..sort(),
     );
   }
 
@@ -302,6 +287,19 @@ class _AccessViewState extends ConsumerState<AccessView> {
     final appLocalizations = context.appLocalizations;
     return [
       _buildConfirm(),
+      IconButton(
+        tooltip: appLocalizations.googlePlayVpn,
+        onPressed: () {
+          ref
+              .read(accessControlStateProvider.notifier)
+              .update(
+                (state) =>
+                    includeGooglePlayInVpn(state, ref.read(packagesProvider)),
+              );
+          dialogs.showNotifier(appLocalizations.googlePlayVpnApplied);
+        },
+        icon: const Icon(Icons.shop_outlined),
+      ),
       CommonPopupBox(
         targetBuilder: (open) {
           return IconButton(

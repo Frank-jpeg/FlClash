@@ -6,6 +6,7 @@ import 'package:archive/archive_io.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:fl_clash/common/common.dart';
+import 'package:fl_clash/common/tailscale.dart';
 import 'package:fl_clash/database/database.dart';
 import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/models/models.dart';
@@ -297,7 +298,9 @@ Future<({String yaml, String md5})> _makeRealProfileTask(
     rawConfig['proxy-groups'] = data.proxyGroups;
   }
   rawConfig['rules'] = rules;
-  final yaml = await _encodeYaml(Map<String, dynamic>.from(rawConfig));
+  final yaml = await _encodeYaml(
+    applyTailscaleConfig(Map<String, dynamic>.from(rawConfig), data.tailscale),
+  );
   return (yaml: yaml, md5: yaml.toMd5());
 }
 

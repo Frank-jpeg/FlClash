@@ -670,4 +670,56 @@ final class _ConfigProvider extends $FunctionalProvider<Config, Config, Config>
   }
 }
 
-String _$_configHash() => r'7f29da1e31a3393fb36ab43c21f0d1b38223afec';
+String _$_configHash() => r'0d2e00e50876268c10167b8d77056ce4bb4477b4';
+
+@ProviderFor(TailscaleSetting)
+final tailscaleSettingProvider = TailscaleSettingProvider._();
+
+final class TailscaleSettingProvider
+    extends $NotifierProvider<TailscaleSetting, TailscaleProps> {
+  TailscaleSettingProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'tailscaleSettingProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$tailscaleSettingHash();
+
+  @$internal
+  @override
+  TailscaleSetting create() => TailscaleSetting();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(TailscaleProps value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<TailscaleProps>(value),
+    );
+  }
+}
+
+String _$tailscaleSettingHash() => r'9baa4ee0f2f767bd683564600ca043db47a1b09f';
+
+abstract class _$TailscaleSetting extends $Notifier<TailscaleProps> {
+  TailscaleProps build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<TailscaleProps, TailscaleProps>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<TailscaleProps, TailscaleProps>,
+              TailscaleProps,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}

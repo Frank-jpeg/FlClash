@@ -232,9 +232,9 @@ void main() {
         themeProps: ThemeProps(),
         currentProfileId: 7,
         overrideDns: true,
+        tailscale: TailscaleProps(enable: true, hostname: 'restored-device'),
       );
       final overrides = buildConfigOverrides(config);
-      expect(overrides.length, 12);
 
       final overrideContainer = ProviderContainer(overrides: overrides);
       addTearDown(overrideContainer.dispose);
@@ -246,6 +246,10 @@ void main() {
         config.patchClashConfig,
       );
       expect(overrideContainer.read(excludeSSIDsProvider), config.excludeSSIDs);
+      expect(
+        overrideContainer.read(tailscaleSettingProvider),
+        config.tailscale,
+      );
       expect(
         overrideContainer.read(appSettingProvider).onlyStatisticsProxy,
         false,

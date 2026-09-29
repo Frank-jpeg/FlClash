@@ -5114,6 +5114,206 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Include Google Play in VPN`
+  String get googlePlayVpn {
+    return Intl.message(
+      'Include Google Play in VPN',
+      name: 'googlePlayVpn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Google Play, Play services, Services Framework and Download Manager will use the VPN when installed. Save the list, then restart the VPN. Subscription rules still apply.`
+  String get googlePlayVpnApplied {
+    return Intl.message(
+      'Google Play, Play services, Services Framework and Download Manager will use the VPN when installed. Save the list, then restart the VPN. Subscription rules still apply.',
+      name: 'googlePlayVpnApplied',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tailscale private network`
+  String get tailscaleTitle {
+    return Intl.message(
+      'Tailscale private network',
+      name: 'tailscaleTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enabled · private network routing`
+  String get tailscaleEnabled {
+    return Intl.message(
+      'Enabled · private network routing',
+      name: 'tailscaleEnabled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Connect to computers and NAS devices`
+  String get tailscaleDisabled {
+    return Intl.message(
+      'Connect to computers and NAS devices',
+      name: 'tailscaleDisabled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enable Tailscale`
+  String get tailscaleEnable {
+    return Intl.message(
+      'Enable Tailscale',
+      name: 'tailscaleEnable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save enables Rule mode: Tailscale addresses use your private network; other traffic keeps the subscription rules. Turn off the separate Tailscale app VPN.`
+  String get tailscaleHelp {
+    return Intl.message(
+      'Save enables Rule mode: Tailscale addresses use your private network; other traffic keeps the subscription rules. Turn off the separate Tailscale app VPN.',
+      name: 'tailscaleHelp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Device name`
+  String get tailscaleHostname {
+    return Intl.message(
+      'Device name',
+      name: 'tailscaleHostname',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Use 1–63 letters, numbers or hyphens; start and end with a letter or number.`
+  String get tailscaleInvalidHostname {
+    return Intl.message(
+      'Use 1–63 letters, numbers or hyphens; start and end with a letter or number.',
+      name: 'tailscaleInvalidHostname',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tailscale Auth Key`
+  String get tailscaleAuthKey {
+    return Intl.message(
+      'Tailscale Auth Key',
+      name: 'tailscaleAuthKey',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter an Auth Key for the first connection. After the device joins, you can clear this field and reuse its local identity.`
+  String get tailscaleAuthKeyHelp {
+    return Intl.message(
+      'Enter an Auth Key for the first connection. After the device joins, you can clear this field and reuse its local identity.',
+      name: 'tailscaleAuthKeyHelp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter a Tailscale Auth Key beginning with tskey-auth-.`
+  String get tailscaleInvalidKey {
+    return Intl.message(
+      'Enter a Tailscale Auth Key beginning with tskey-auth-.',
+      name: 'tailscaleInvalidKey',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create an Auth Key`
+  String get tailscaleCreateKey {
+    return Intl.message(
+      'Create an Auth Key',
+      name: 'tailscaleCreateKey',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Subnet routes (optional)`
+  String get tailscaleSubnets {
+    return Intl.message(
+      'Subnet routes (optional)',
+      name: 'tailscaleSubnets',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Leave empty for Tailscale IPs and full .ts.net names. For a subnet router, enter its approved CIDR routes, one per line.`
+  String get tailscaleSubnetsHelp {
+    return Intl.message(
+      'Leave empty for Tailscale IPs and full .ts.net names. For a subnet router, enter its approved CIDR routes, one per line.',
+      name: 'tailscaleSubnetsHelp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter valid IPv4 or IPv6 CIDRs, such as 192.168.1.0/24. Default routes are not supported.`
+  String get tailscaleInvalidSubnet {
+    return Intl.message(
+      'Enter valid IPv4 or IPv6 CIDRs, such as 192.168.1.0/24. Default routes are not supported.',
+      name: 'tailscaleInvalidSubnet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Apps used to access the private network must be included in FlClash VPN access control. DNS names should use the full device.tailnet.ts.net form.`
+  String get tailscaleAppsHint {
+    return Intl.message(
+      'Apps used to access the private network must be included in FlClash VPN access control. DNS names should use the full device.tailnet.ts.net form.',
+      name: 'tailscaleAppsHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save and apply`
+  String get tailscaleSave {
+    return Intl.message(
+      'Save and apply',
+      name: 'tailscaleSave',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Settings saved. Access a private device to connect; a subscription profile must be selected.`
+  String get tailscaleSaved {
+    return Intl.message(
+      'Settings saved. Access a private device to connect; a subscription profile must be selected.',
+      name: 'tailscaleSaved',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Settings saved, but applying the profile failed. Check the configuration and try again.`
+  String get tailscaleApplyFailed {
+    return Intl.message(
+      'Settings saved, but applying the profile failed. Check the configuration and try again.',
+      name: 'tailscaleApplyFailed',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

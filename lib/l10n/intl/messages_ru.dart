@@ -510,6 +510,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "goToConfigureScript": MessageLookupByLibrary.simpleMessage(
       "Перейти к настройке скрипта",
     ),
+    "googlePlayVpn": MessageLookupByLibrary.simpleMessage(
+      "Включить Google Play в VPN",
+    ),
+    "googlePlayVpnApplied": MessageLookupByLibrary.simpleMessage(
+      "Установленные компоненты Google Play, сервисы Play, Services Framework и диспетчер загрузок включены в VPN. Сохраните список и перезапустите VPN. Правила подписки продолжают действовать.",
+    ),
     "hasCacheChange": MessageLookupByLibrary.simpleMessage(
       "Кэшировать изменения?",
     ),
@@ -565,9 +571,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "inputRuleContent": MessageLookupByLibrary.simpleMessage(
       "Введите содержимое правила",
     ),
-    "installedAppsPermissionDeniedMessage": MessageLookupByLibrary.simpleMessage(
-      "Разрешение на список приложений отклонено, поэтому установленные приложения недоступны. Предоставьте его вручную в системных настройках.",
-    ),
+    "installedAppsPermissionDeniedMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "Разрешение на список приложений отклонено, поэтому установленные приложения недоступны. Предоставьте его вручную в системных настройках.",
+        ),
     "installedAppsPermissionDesc": MessageLookupByLibrary.simpleMessage(
       "Эта система не выдаёт список установленных приложений без разрешения. Предоставьте его, чтобы настроить прокси для отдельных приложений.",
     ),
@@ -1163,6 +1170,58 @@ class MessageLookup extends MessageLookupByLibrary {
     "tabAnimation": MessageLookupByLibrary.simpleMessage("Анимация вкладок"),
     "tabAnimationDesc": MessageLookupByLibrary.simpleMessage(
       "Действует только в мобильном виде",
+    ),
+    "tailscaleApplyFailed": MessageLookupByLibrary.simpleMessage(
+      "Настройки сохранены, но применить профиль не удалось. Проверьте конфигурацию и повторите.",
+    ),
+    "tailscaleAppsHint": MessageLookupByLibrary.simpleMessage(
+      "Приложения для доступа к частной сети должны входить в VPN FlClash. Используйте полное DNS-имя device.tailnet.ts.net.",
+    ),
+    "tailscaleAuthKey": MessageLookupByLibrary.simpleMessage(
+      "Ключ авторизации Tailscale",
+    ),
+    "tailscaleAuthKeyHelp": MessageLookupByLibrary.simpleMessage(
+      "Для первого подключения введите Auth Key. После присоединения можно очистить поле и использовать локально сохранённую учётную запись устройства.",
+    ),
+    "tailscaleCreateKey": MessageLookupByLibrary.simpleMessage(
+      "Создать ключ авторизации",
+    ),
+    "tailscaleDisabled": MessageLookupByLibrary.simpleMessage(
+      "Подключение к компьютерам и NAS",
+    ),
+    "tailscaleEnable": MessageLookupByLibrary.simpleMessage(
+      "Включить Tailscale",
+    ),
+    "tailscaleEnabled": MessageLookupByLibrary.simpleMessage(
+      "Включено · маршрутизация частной сети",
+    ),
+    "tailscaleHelp": MessageLookupByLibrary.simpleMessage(
+      "Сохранение включает режим правил: адреса Tailscale используют частную сеть, остальной трафик следует правилам подписки. Отключите VPN отдельного приложения Tailscale.",
+    ),
+    "tailscaleHostname": MessageLookupByLibrary.simpleMessage("Имя устройства"),
+    "tailscaleInvalidHostname": MessageLookupByLibrary.simpleMessage(
+      "От 1 до 63 латинских букв, цифр и дефисов; начало и конец — буква или цифра.",
+    ),
+    "tailscaleInvalidKey": MessageLookupByLibrary.simpleMessage(
+      "Введите Auth Key, начинающийся с tskey-auth-.",
+    ),
+    "tailscaleInvalidSubnet": MessageLookupByLibrary.simpleMessage(
+      "Введите корректный IPv4 или IPv6 CIDR, например 192.168.1.0/24. Маршруты по умолчанию не поддерживаются.",
+    ),
+    "tailscaleSave": MessageLookupByLibrary.simpleMessage(
+      "Сохранить и применить",
+    ),
+    "tailscaleSaved": MessageLookupByLibrary.simpleMessage(
+      "Настройки сохранены. Выберите профиль подписки и откройте частное устройство для подключения.",
+    ),
+    "tailscaleSubnets": MessageLookupByLibrary.simpleMessage(
+      "Маршруты подсетей (необязательно)",
+    ),
+    "tailscaleSubnetsHelp": MessageLookupByLibrary.simpleMessage(
+      "Для IP Tailscale и полных имён .ts.net оставьте пустым. Для маршрутизатора подсети укажите одобренные CIDR, по одному в строке.",
+    ),
+    "tailscaleTitle": MessageLookupByLibrary.simpleMessage(
+      "Частная сеть Tailscale",
     ),
     "tapToAuthorize": MessageLookupByLibrary.simpleMessage(
       "Нажмите, чтобы разрешить",

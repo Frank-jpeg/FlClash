@@ -271,6 +271,7 @@ abstract class Config with _$Config {
     @Default(defaultWindowProps) WindowProps windowProps,
     @Default(defaultClashConfig) PatchClashConfig patchClashConfig,
     @Default([]) List<String> excludeSSIDs,
+    @Default(TailscaleProps()) TailscaleProps tailscale,
   }) = _Config;
 
   factory Config.fromJson(Map<String, Object?> json) => _$ConfigFromJson(json);
@@ -281,4 +282,17 @@ abstract class Config with _$Config {
     }
     return _$ConfigFromJson(json);
   }
+}
+
+@freezed
+abstract class TailscaleProps with _$TailscaleProps {
+  const factory TailscaleProps({
+    @Default(false) bool enable,
+    @Default('flclash-home') String hostname,
+    @Default('') String authKey,
+    @Default([]) List<String> subnets,
+  }) = _TailscaleProps;
+
+  factory TailscaleProps.fromJson(Map<String, Object?> json) =>
+      _$TailscalePropsFromJson(json);
 }

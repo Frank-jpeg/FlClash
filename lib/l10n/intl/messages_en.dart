@@ -496,6 +496,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "goToConfigureScript": MessageLookupByLibrary.simpleMessage(
       "Go to script configuration",
     ),
+    "googlePlayVpn": MessageLookupByLibrary.simpleMessage(
+      "Include Google Play in VPN",
+    ),
+    "googlePlayVpnApplied": MessageLookupByLibrary.simpleMessage(
+      "Google Play, Play services, Services Framework and Download Manager will use the VPN when installed. Save the list, then restart the VPN. Subscription rules still apply.",
+    ),
     "hasCacheChange": MessageLookupByLibrary.simpleMessage(
       "Cache the changes?",
     ),
@@ -551,9 +557,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "inputRuleContent": MessageLookupByLibrary.simpleMessage(
       "Enter the rule content",
     ),
-    "installedAppsPermissionDeniedMessage": MessageLookupByLibrary.simpleMessage(
-      "The app list permission was denied, so installed apps cannot be listed. Please grant it manually in system settings.",
-    ),
+    "installedAppsPermissionDeniedMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "The app list permission was denied, so installed apps cannot be listed. Please grant it manually in system settings.",
+        ),
     "installedAppsPermissionDesc": MessageLookupByLibrary.simpleMessage(
       "This system hides the installed app list until the permission is granted. Authorize it to configure the per-app proxy.",
     ),
@@ -1115,6 +1122,54 @@ class MessageLookup extends MessageLookupByLibrary {
     "tabAnimation": MessageLookupByLibrary.simpleMessage("Tab animation"),
     "tabAnimationDesc": MessageLookupByLibrary.simpleMessage(
       "Only effective in mobile view",
+    ),
+    "tailscaleApplyFailed": MessageLookupByLibrary.simpleMessage(
+      "Settings saved, but applying the profile failed. Check the configuration and try again.",
+    ),
+    "tailscaleAppsHint": MessageLookupByLibrary.simpleMessage(
+      "Apps used to access the private network must be included in FlClash VPN access control. DNS names should use the full device.tailnet.ts.net form.",
+    ),
+    "tailscaleAuthKey": MessageLookupByLibrary.simpleMessage(
+      "Tailscale Auth Key",
+    ),
+    "tailscaleAuthKeyHelp": MessageLookupByLibrary.simpleMessage(
+      "Enter an Auth Key for the first connection. After the device joins, you can clear this field and reuse its local identity.",
+    ),
+    "tailscaleCreateKey": MessageLookupByLibrary.simpleMessage(
+      "Create an Auth Key",
+    ),
+    "tailscaleDisabled": MessageLookupByLibrary.simpleMessage(
+      "Connect to computers and NAS devices",
+    ),
+    "tailscaleEnable": MessageLookupByLibrary.simpleMessage("Enable Tailscale"),
+    "tailscaleEnabled": MessageLookupByLibrary.simpleMessage(
+      "Enabled · private network routing",
+    ),
+    "tailscaleHelp": MessageLookupByLibrary.simpleMessage(
+      "Save enables Rule mode: Tailscale addresses use your private network; other traffic keeps the subscription rules. Turn off the separate Tailscale app VPN.",
+    ),
+    "tailscaleHostname": MessageLookupByLibrary.simpleMessage("Device name"),
+    "tailscaleInvalidHostname": MessageLookupByLibrary.simpleMessage(
+      "Use 1–63 letters, numbers or hyphens; start and end with a letter or number.",
+    ),
+    "tailscaleInvalidKey": MessageLookupByLibrary.simpleMessage(
+      "Enter a Tailscale Auth Key beginning with tskey-auth-.",
+    ),
+    "tailscaleInvalidSubnet": MessageLookupByLibrary.simpleMessage(
+      "Enter valid IPv4 or IPv6 CIDRs, such as 192.168.1.0/24. Default routes are not supported.",
+    ),
+    "tailscaleSave": MessageLookupByLibrary.simpleMessage("Save and apply"),
+    "tailscaleSaved": MessageLookupByLibrary.simpleMessage(
+      "Settings saved. Access a private device to connect; a subscription profile must be selected.",
+    ),
+    "tailscaleSubnets": MessageLookupByLibrary.simpleMessage(
+      "Subnet routes (optional)",
+    ),
+    "tailscaleSubnetsHelp": MessageLookupByLibrary.simpleMessage(
+      "Leave empty for Tailscale IPs and full .ts.net names. For a subnet router, enter its approved CIDR routes, one per line.",
+    ),
+    "tailscaleTitle": MessageLookupByLibrary.simpleMessage(
+      "Tailscale private network",
     ),
     "tapToAuthorize": MessageLookupByLibrary.simpleMessage("Tap to authorize"),
     "tcpConcurrent": MessageLookupByLibrary.simpleMessage("TCP concurrent"),

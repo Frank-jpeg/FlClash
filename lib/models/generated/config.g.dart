@@ -375,6 +375,9 @@ _Config _$ConfigFromJson(Map<String, dynamic> json) => _Config(
           ?.map((e) => e as String)
           .toList() ??
       const [],
+  tailscale: json['tailscale'] == null
+      ? const TailscaleProps()
+      : TailscaleProps.fromJson(json['tailscale'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$ConfigToJson(_Config instance) => <String, dynamic>{
@@ -390,4 +393,25 @@ Map<String, dynamic> _$ConfigToJson(_Config instance) => <String, dynamic>{
   'windowProps': instance.windowProps,
   'patchClashConfig': instance.patchClashConfig,
   'excludeSSIDs': instance.excludeSSIDs,
+  'tailscale': instance.tailscale,
 };
+
+_TailscaleProps _$TailscalePropsFromJson(Map<String, dynamic> json) =>
+    _TailscaleProps(
+      enable: json['enable'] as bool? ?? false,
+      hostname: json['hostname'] as String? ?? 'flclash-home',
+      authKey: json['authKey'] as String? ?? '',
+      subnets:
+          (json['subnets'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+    );
+
+Map<String, dynamic> _$TailscalePropsToJson(_TailscaleProps instance) =>
+    <String, dynamic>{
+      'enable': instance.enable,
+      'hostname': instance.hostname,
+      'authKey': instance.authKey,
+      'subnets': instance.subnets,
+    };

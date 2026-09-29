@@ -10,6 +10,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'widget_registry.dart';
 import 'widgets/core_status_button.dart';
 import 'widgets/start_button.dart';
+import 'widgets/access_control.dart';
+import '../tailscale.dart';
 
 typedef _IsEditWidgetBuilder = Widget Function(bool isEdit);
 
@@ -246,11 +248,22 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
                                 },
                               ),
                             )
-                          : Grid(
-                              crossAxisCount: columns,
-                              crossAxisSpacing: spacing,
-                              mainAxisSpacing: spacing,
-                              children: children,
+                          : Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (system.isAndroid) ...[
+                                  const AccessControlCard(),
+                                  SizedBox(height: spacing),
+                                  const TailscaleCard(),
+                                  SizedBox(height: spacing),
+                                ],
+                                Grid(
+                                  crossAxisCount: columns,
+                                  crossAxisSpacing: spacing,
+                                  mainAxisSpacing: spacing,
+                                  children: children,
+                                ),
+                              ],
                             );
                     },
                   ),

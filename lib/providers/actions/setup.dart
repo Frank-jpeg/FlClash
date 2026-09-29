@@ -365,6 +365,7 @@ class SetupAction extends _$SetupAction {
         addedRules: addedRules,
         defaultUA: defaultUA,
         authentication: networkSetting.authentication.credentials,
+        tailscale: ref.read(tailscaleSettingProvider),
         matchTarget: setupState.matchTarget,
       ),
     );
