@@ -78,9 +78,9 @@ class Request {
       if (response.statusCode != 200) return null;
       final data = response.data as Map<String, dynamic>;
       final remoteVersion = data['tag_name'];
+      if (remoteVersion is! String) return null;
       final version = globalState.packageInfo.version;
-      final hasUpdate =
-          compareVersions(remoteVersion.replaceAll('v', ''), version) > 0;
+      final hasUpdate = compareVersions(remoteVersion, version) > 0;
       if (!hasUpdate) return null;
       return data;
     } catch (e) {

@@ -121,6 +121,45 @@ void main() {
 
     test('handles missing minor/patch', () {
       expect(compareVersions('1', '1.0.0'), 0);
+      expect(compareVersions('1.2', '1.2.0+0'), 0);
+    });
+
+    test('compares home revisions numerically and accepts a leading v', () {
+      expect(
+        compareVersions('v0.8.98-home.2', '0.8.98-home.1'),
+        greaterThan(0),
+      );
+      expect(
+        compareVersions('0.8.98-home.10', '0.8.98-home.2'),
+        greaterThan(0),
+      );
+      expect(compareVersions('v0.8.98-home.1', '0.8.98-home.1'), 0);
+      expect(compareVersions('0.8.98-home.1', '0.8.98-home.2'), lessThan(0));
+    });
+
+    test('compares base versions before home revisions and build numbers', () {
+      expect(
+        compareVersions('0.8.99-home.1', '0.8.98-home.10'),
+        greaterThan(0),
+      );
+      expect(compareVersions('0.8.97-home.9', '0.8.98-home.1'), lessThan(0));
+      expect(
+        compareVersions('0.8.98-home.2+1', '0.8.98-home.1+2026092901'),
+        greaterThan(0),
+      );
+      expect(
+        compareVersions('0.8.98-home.1+2026092902', '0.8.98-home.1+2026092901'),
+        greaterThan(0),
+      );
+    });
+
+    test('rejects malformed release tags', () {
+      for (final tag in ['latest', '0.8.98.1', 'v0.8.v98', '0.8.98-home.']) {
+        expect(
+          () => compareVersions(tag, '0.8.98-home.1'),
+          throwsFormatException,
+        );
+      }
     });
   });
 
