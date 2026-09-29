@@ -5,21 +5,23 @@
 
 ## 安装与更新
 
-普通安卓手机使用 `FlClash-home-0.8.98-arm64-v8a.apk`，x86_64 模拟器使用对应 x86_64 APK。
-2026-09-29 交付的两份安装包已用同一固定签名签署；后续使用相同包名、相同签名的新版本
-覆盖安装，通常可保留配置。首次使用需自行导入原有配置或订阅。
+普通安卓手机：[直接下载 ARM64 APK](https://github.com/Frank-jpeg/FlClash/releases/latest/download/FlClash-home-arm64-v8a.apk)。
+x86_64 模拟器：[直接下载 x86_64 APK](https://github.com/Frank-jpeg/FlClash/releases/latest/download/FlClash-home-x86_64.apk)。
+无需解压或登录 GitHub；仓库首页也提供相同入口。
 
-新版 `0.8.98-home.2+2026092902` 由 [GitHub Actions 自动构建](https://github.com/Frank-jpeg/FlClash/actions/runs/36576531323)。
-构建成功后，在页面底部 **Artifacts** 下载 `FlClash-home-a84c30cb5b7095474ddd141d5425880ef8013f0e`，
-解压后手机选 `app-arm64-v8a-release.apk`，模拟器选 `app-x86_64-release.apk`；通常需要登录 GitHub。
-云端产物使用临时 debug 签名，不能保证覆盖旧的固定签名版；覆盖升级前仍需用原密钥重签。
-Actions artifact 不是 GitHub Release，且有保存期限。
+当前发布版本为 `0.8.98-home.2+2026092902`，源码对应 `a84c30c`。Release 中的两个 APK
+沿用首页版固定签名，可覆盖此前固定签名的 home.1，通常可保留配置。首次使用需自行导入配置或订阅。
+[更新记录与校验文件](https://github.com/Frank-jpeg/FlClash/releases/latest)。
+
+APK 由 [GitHub Actions 自动构建](https://github.com/Frank-jpeg/FlClash/actions/runs/36576531323)，
+由 `Publish home APK` 在云端使用原密钥签署并自动发布到 Releases。
+Actions 中的原始 ZIP 使用临时 debug 签名，且有保存期限；日常安装请选择上述 Release APK。
 
 源码位于公开仓库 [Frank-jpeg/FlClash](https://github.com/Frank-jpeg/FlClash) 的
 [`feature/android-home-tailscale`](https://github.com/Frank-jpeg/FlClash/tree/feature/android-home-tailscale) 分支。
 仓库 README 中保留的原版下载链接不包含本定制功能。
 当前源码的手动、自动检查更新及更新下载页均指向本 Fork 的 GitHub Releases，支持 `-home.N`
-版本号。发现新版后打开下载页，由用户下载安装；目前尚未发布定制版 Release。
+版本号。发现新版后打开下载页，由用户下载安装；home.2 已发布到本仓库 Releases。
 已交付的旧 APK 对应提交 `552585e`，尚未包含更新源和重启提醒修正，需要安装新 APK 后生效。
 上游更新仍需合并、重新打包并使用固定签名发布，应用不会自动合并上游代码。
 构建方式及上游同步步骤见[维护说明](HOME-MAINTENANCE.md)。

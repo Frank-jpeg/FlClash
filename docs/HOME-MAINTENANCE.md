@@ -8,19 +8,21 @@
 | 上游 | `chen08209/FlClash` |
 | 本地 remote | `origin` 指向 Fork，`upstream` 指向原项目 |
 | 定制分支 | `feature/android-home-tailscale` |
-| 默认分支 | `main`；该日期尚未合入定制功能 |
+| 默认分支 | `main`；首页有定制 APK 直链，尚未合入定制功能 |
 | 上游基线 | `v0.8.98`，发布于 2026-09-14 |
 | 源码应用版本 | `0.8.98-home.2+2026092902` |
+| APK versionCode | ARM64：`2026094902`；x86_64：`2026096902`（Flutter 按 ABI 加偏移） |
 | Android 包名 | `com.follow.clash.home`；debug 构建另有 `.dev` 后缀 |
-| 已交付 APK 对应代码 | `552585ee503b56984be0fcb1edf71eb19d478c3c` |
+| 已发布 APK 对应代码 | `a84c30cb5b7095474ddd141d5425880ef8013f0e`（home.2） |
 | 更新源修复 | `8cc4ca2`：Fork Release 地址及 home 版本比较 |
 | VPN 提醒修复 | `b9fa81d`：启动快照、双向开关提示及原生停止后重启 |
 | 新包构建提交 | `a84c30c`：递增 home/build 版本并按 SHA 命名构建产物 |
 
-`6991d06` 和 `adeaec3` 只调整文档和测试；`8cc4ca2`、`b9fa81d` 已改变应用代码，尚未交付新安装包。
-旧 APK 使用 `0.8.98-home.1+2026092901`；新版递增为 `0.8.98-home.2+2026092902`。
-APK 已本地签署并交付，尚未创建定制版 GitHub Release；Actions artifact 是临时保存的构建产物。
-home.2 提供 Actions 构建下载入口，尚未本地下载或用原密钥重签；不能将它标为已签名覆盖升级包。
+旧 APK 对应 `552585e`，版本 `0.8.98-home.1+2026092901`。
+新版 `0.8.98-home.2+2026092902` 包含 `8cc4ca2`、`b9fa81d` 的更新源与重启提醒修正，
+已将成功的 Actions 产物用原密钥签署，发布为 [v0.8.98-home.2](https://github.com/Frank-jpeg/FlClash/releases/tag/v0.8.98-home.2)。
+默认分支和定制分支的中英 README 均直接链接 Release APK，无需登录 GitHub 或解压。
+Actions artifact 仍是使用临时 debug 签名的原始构建产物，与固定签名的 Release APK 分开。
 使用 `gh` 时显式指定 `-R Frank-jpeg/FlClash`，避免 Fork 环境默认查询上游仓库。
 
 ## 构建与签名
@@ -85,7 +87,17 @@ GitHub 的 Sync fork 不会自动处理定制冲突，也不会保证产物使�
 版本比较支持前导 `v`、`-home.N` 和数字 build number；发布时递增 home 序号和 Android build number，
 例如下一版 `v0.8.98-home.3`。GitHub Release 应标为正式发布，预发布不会被 `releases/latest` 返回。
 发布时附上固定签名的 APK；上游 `.github/release_template.md` 仍含上游下载地址，不能直接用作定制版下载页。
-目前没有定制版 Release，也没有自动下载安装或自动合并上游的功能。已交付的旧 APK 尚未包含此修正。
+home.2 已作为正式 Release 发布；应用没有自动下载安装或自动合并上游的功能。
+`publish-home-apk.yml` 监听定制分支 `Build home APK` 的成功结果，在线下载该次构建产物，
+使用 Actions Secrets 中的既有首页版签名，核对证书、包名、版本和架构后自动发布 Release APK。
+工作流需同时保留在默认 `main` 分支（接收 `workflow_run` 事件）和定制分支。
+仓库 Secrets 为 `HOME_ANDROID_KEYSTORE_BASE64`、`HOME_ANDROID_SIGNING_PASSWORD`，不提交凭据文件。
+发布前必须递增 home/build 版本；若同名 tag 指向不同源码，发布拒绝覆盖。
+重试时可手动运行 `Publish home APK`，输入成功的 `Build home APK` run ID，无需重新编译。
+该流程仅接受本仓库定制分支的成功构建，不检出或运行产物中的脚本。
+Release 资产保持 `FlClash-home-arm64-v8a.apk`、`FlClash-home-x86_64.apk` 和 `SHA256SUMS.txt`
+命名，新版本设为 latest，使首页 `/releases/latest/download/` 直链继续有效；重试旧版本不回退 latest。
+已交付的旧 home.1 APK 尚未包含更新源修正。
 
 ## 实现导航
 
@@ -109,9 +121,9 @@ GitHub 的 Sync fork 不会自动处理定制冲突，也不会保证产物使�
   原 APK 构建已被 home.2 构建取代；新构建和验证分别为
   [home.2 APK](https://github.com/Frank-jpeg/FlClash/actions/runs/36576531323)及
   [home.2 检查](https://github.com/Frank-jpeg/FlClash/actions/runs/36576531340)。
-  下载入口在构建页的 Artifacts，名称 `FlClash-home-a84c30cb5b7095474ddd141d5425880ef8013f0e`；
-  仅在成功上传后可用，运行状态以链接为准。
-  2026-09-29 21:47（UTC+8）核对：home.2 完整检查已通过，APK 构建仍在运行，尚未上传 artifact。
+  home.2 完整检查已通过，APK 构建于 2026-09-29 21:52（UTC+8）成功完成。
+  原始 artifact 为 `11037729767`，名称 `FlClash-home-a84c30cb5b7095474ddd141d5425880ef8013f0e`。
+  Release APK 已核对构建提交、归档摘要、固定签名证书、包名及版本；设备复测由用户完成。
 - 本机有 Flutter/Android/JDK 环境；此次原生编译检查未完成，缓存的 Gradle 9.3.1 离线缺少
   `org.gradle.kotlin.kotlin-dsl:6.4.2`，仓库所需 Gradle 9.2.1 也未完成下载。不是源码编译通过记录。
 - Windows 本地较早一次全量测试出现 6 个路径分隔符相关失败，不能称其全绿；

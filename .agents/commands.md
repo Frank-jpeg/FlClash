@@ -264,7 +264,8 @@ Run `flutter analyze` locally before committing when practical.
 The upstream-style release build in `build.yaml` runs only for `v*` tag pushes;
 pull requests trigger nothing. The separate `build-home-apk.yml` also builds on
 matching source changes on `feature/android-home-tailscale`, or manual dispatch,
-and uploads APK artifacts without creating a GitHub release.
+and uploads APK artifacts. `publish-home-apk.yml` then signs successful Home artifacts with the existing
+Home key and publishes direct APK downloads to this fork's Releases; see the maintenance guide.
 Root analysis excludes `plugins/**`, and root tests do not discover nested
 plugin packages, so parallel jobs validate the rest from their own package
 directories: `plugins` (local Flutter packages and the setup build tool), `go`
