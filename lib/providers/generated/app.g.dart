@@ -9,6 +9,58 @@ part of '../app.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
+@ProviderFor(StartedVpnState)
+final startedVpnStateProvider = StartedVpnStateProvider._();
+
+final class StartedVpnStateProvider
+    extends $NotifierProvider<StartedVpnState, VpnState?> {
+  StartedVpnStateProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'startedVpnStateProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$startedVpnStateHash();
+
+  @$internal
+  @override
+  StartedVpnState create() => StartedVpnState();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(VpnState? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<VpnState?>(value),
+    );
+  }
+}
+
+String _$startedVpnStateHash() => r'77f9ed4a748e96481c845338476ca57260c21400';
+
+abstract class _$StartedVpnState extends $Notifier<VpnState?> {
+  VpnState? build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<VpnState?, VpnState?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<VpnState?, VpnState?>,
+              VpnState?,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}
+
 @ProviderFor(AuthorizedTunEnable)
 final authorizedTunEnableProvider = AuthorizedTunEnableProvider._();
 

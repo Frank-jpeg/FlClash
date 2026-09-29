@@ -80,6 +80,7 @@ class TestSetupAction extends SetupAction {
   int trafficResets = 0;
   int applyProfileCalls = 0;
   bool blockCoreCalls = false;
+  bool coreRunningResult = true;
   Error? coreRunningError;
   int authorizeCalls = 0;
   AuthorizeCode authorizeResult = AuthorizeCode.none;
@@ -102,7 +103,7 @@ class TestSetupAction extends SetupAction {
     if (error != null) {
       throw error;
     }
-    return true;
+    return coreRunningResult;
   }
 
   @override
@@ -195,6 +196,18 @@ void main() {
   });
 
   group('run failures', () {
+    test(
+      'a rejected listener handoff does not clear pending VPN settings',
+      () async {
+        markInitialized();
+        action.coreRunningResult = false;
+        await expectLater(action.setRunning(true), throwsStateError);
+        expect(container.read(startedVpnStateProvider), isNull);
+        expect(container.read(runTimeProvider), isNull);
+        action.coreRunningResult = true;
+      },
+    );
+
     test('a start the core rejects stops reporting a run time', () async {
       markInitialized();
       action.coreRunningError = StateError('start failed');
@@ -223,6 +236,26 @@ void main() {
       },
     );
   });
+
+  test(
+    'a successful start records only the settings submitted to that start',
+    () async {
+      markInitialized();
+      container.listen(vpnSettingProvider, (_, _) {});
+      final submitted = container.read(vpnStateProvider);
+      action.blockCoreCalls = true;
+      final starting = action.setRunning(true);
+      await Future<void>.delayed(Duration.zero);
+      expect(container.read(startedVpnStateProvider), isNull);
+      container
+          .read(vpnSettingProvider.notifier)
+          .update((state) => state.copyWith.accessControlProps(enable: true));
+      action.pendingCoreCalls.single.complete();
+      await starting;
+      expect(container.read(startedVpnStateProvider), submitted);
+      expect(container.read(vpnRestartRequiredProvider), isTrue);
+    },
+  );
 
   group('stop cleanup', () {
     test('resets traffic counters and re-checks the ip', () async {

@@ -1,31 +1,66 @@
+import 'dart:async';
+
 import 'package:fl_clash/common/common.dart';
+import 'package:fl_clash/common/theme.dart';
 import 'package:fl_clash/l10n/l10n.dart';
 import 'package:fl_clash/manager/status_manager.dart';
 import 'package:fl_clash/manager/vpn_manager.dart';
-import 'package:fl_clash/models/models.dart';
+import 'package:fl_clash/providers/action.dart';
 import 'package:fl_clash/providers/app.dart';
 import 'package:fl_clash/providers/config.dart';
 import 'package:fl_clash/providers/state.dart';
 import 'package:fl_clash/state.dart';
+import 'package:fl_clash/views/dashboard/widgets/access_control.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+class _RestartAction extends CoreAction {
+  int calls = 0;
+  bool succeeds = true;
+  Completer<void>? gate;
+
+  @override
+  Future<bool> restartCore() async {
+    calls++;
+    final submitted = ref.read(vpnStateProvider);
+    await gate?.future;
+    if (succeeds && ref.mounted) {
+      ref.read(startedVpnStateProvider.notifier).value = submitted;
+    }
+    return succeeds;
+  }
+}
+
 void main() {
   late ProviderContainer container;
+  late _RestartAction restart;
 
   setUp(() {
-    container = ProviderContainer();
+    restart = _RestartAction();
+    container = ProviderContainer(
+      overrides: [coreActionProvider.overrideWith(() => restart)],
+    );
     globalState.container = container;
-    globalState.lastVpnState = null;
+    container.listen(vpnSettingProvider, (_, _) {});
+    container.read(startedVpnStateProvider.notifier).value = container.read(
+      vpnStateProvider,
+    );
   });
 
-  tearDown(() {
-    container.dispose();
-    globalState.lastVpnState = null;
-  });
+  tearDown(() => container.dispose());
 
-  Future<void> pumpVpnManager(WidgetTester tester) async {
+  void setAccess(bool enabled) {
+    container
+        .read(vpnSettingProvider.notifier)
+        .update((state) => state.copyWith.accessControlProps(enable: enabled));
+  }
+
+  Future<void> pumpVpnManager(
+    WidgetTester tester, {
+    bool running = true,
+  }) async {
+    container.read(runTimeProvider.notifier).value = running ? 1 : null;
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
@@ -36,83 +71,144 @@ void main() {
             ...GlobalMaterialLocalizations.delegates,
           ],
           supportedLocales: AppLocalizations.delegate.supportedLocales,
-          builder: (_, child) {
+          builder: (context, child) {
+            globalState.measure = Measure.of(context, 1);
+            globalState.theme = CommonTheme.of(context, 1);
             return StatusManager(child: VpnManager(child: child!));
           },
-          home: const SizedBox(),
+          home: const Scaffold(body: AccessControlCard()),
         ),
       ),
     );
     await tester.pump();
   }
 
-  Future<void> drainTimers(WidgetTester tester) async {
-    await tester.pump(const Duration(seconds: 11));
+  Future<void> finish(WidgetTester tester) async {
     await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
   }
 
-  testWidgets('shows a tip when the vpn state changes while started', (
+  testWidgets('prompts for enabling and disabling immediately after restart', (
     tester,
   ) async {
     await pumpVpnManager(tester);
-    container.read(runTimeProvider.notifier).value = 1;
-
-    container
-        .read(vpnSettingProvider.notifier)
-        .update((_) => const VpnProps(enable: false));
-    await tester.pump();
-
+    setAccess(true);
+    await tester.pumpAndSettle();
     expect(
       find.text(currentAppLocalizations.vpnConfigChangeDetected),
       findsOneWidget,
     );
-    await drainTimers(tester);
-  });
+    expect(find.text(currentAppLocalizations.vpnTip), findsOneWidget);
 
-  testWidgets('does not show a tip when not started', (tester) async {
-    await pumpVpnManager(tester);
-
-    container
-        .read(vpnSettingProvider.notifier)
-        .update((_) => const VpnProps(enable: false));
-    await tester.pump();
-
+    await tester.tap(find.text(currentAppLocalizations.restart));
+    await tester.pumpAndSettle();
+    expect(restart.calls, 1);
+    expect(find.text(currentAppLocalizations.vpnTip), findsNothing);
     expect(
       find.text(currentAppLocalizations.vpnConfigChangeDetected),
       findsNothing,
     );
-    await drainTimers(tester);
-  });
 
-  testWidgets('does not repeat the tip for the same vpn state', (tester) async {
-    await pumpVpnManager(tester);
-    container.read(runTimeProvider.notifier).value = 1;
-
-    container
-        .read(vpnSettingProvider.notifier)
-        .update((_) => const VpnProps(enable: false));
-    await tester.pump();
+    setAccess(false);
+    await tester.pumpAndSettle();
+    expect(find.text(currentAppLocalizations.vpnTip), findsOneWidget);
     expect(
       find.text(currentAppLocalizations.vpnConfigChangeDetected),
       findsOneWidget,
     );
-    await tester.pump(const Duration(seconds: 7));
-    await tester.pump(const Duration(milliseconds: 500));
+    await tester.tap(find.text(currentAppLocalizations.restart));
+    await tester.pumpAndSettle();
+    expect(restart.calls, 2);
+    expect(find.text(currentAppLocalizations.vpnTip), findsNothing);
+    await finish(tester);
+  });
+
+  testWidgets('reverting settings or stopping clears the pending warning', (
+    tester,
+  ) async {
+    await pumpVpnManager(tester);
+    setAccess(true);
+    await tester.pumpAndSettle();
+    setAccess(false);
+    await tester.pumpAndSettle();
     expect(
       find.text(currentAppLocalizations.vpnConfigChangeDetected),
       findsNothing,
     );
+    expect(find.text(currentAppLocalizations.vpnTip), findsNothing);
 
-    globalState.lastVpnState = container.read(vpnStateProvider);
-    container
-        .read(vpnSettingProvider.notifier)
-        .update((_) => const VpnProps(enable: true));
+    setAccess(true);
+    await tester.pumpAndSettle();
+    container.read(runTimeProvider.notifier).value = null;
+    await tester.pumpAndSettle();
+    expect(
+      find.text(currentAppLocalizations.vpnConfigChangeDetected),
+      findsNothing,
+    );
+    await finish(tester);
+  });
+
+  testWidgets('does not ask for a restart while stopped', (tester) async {
+    await pumpVpnManager(tester, running: false);
+    setAccess(true);
+    await tester.pumpAndSettle();
+    expect(
+      find.text(currentAppLocalizations.vpnConfigChangeDetected),
+      findsNothing,
+    );
+    expect(find.text(currentAppLocalizations.vpnTip), findsNothing);
+    await finish(tester);
+  });
+
+  testWidgets('failed restart keeps changes pending and allows retry', (
+    tester,
+  ) async {
+    await pumpVpnManager(tester);
+    restart.succeeds = false;
+    setAccess(true);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(currentAppLocalizations.restart));
+    await tester.pumpAndSettle();
+    expect(find.text(currentAppLocalizations.vpnTip), findsOneWidget);
+    expect(
+      find.text(currentAppLocalizations.vpnConfigChangeDetected),
+      findsOneWidget,
+    );
+    restart.succeeds = true;
+    await tester.tap(find.text(currentAppLocalizations.restart));
+    await tester.pumpAndSettle();
+    expect(restart.calls, 2);
+    expect(find.text(currentAppLocalizations.vpnTip), findsNothing);
+    await finish(tester);
+  });
+
+  testWidgets('changes during restart remain pending and disposal is safe', (
+    tester,
+  ) async {
+    await pumpVpnManager(tester);
+    restart.gate = Completer<void>();
+    setAccess(true);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(currentAppLocalizations.restart));
+    await tester.pumpAndSettle();
+    expect(find.text(currentAppLocalizations.vpnTip), findsOneWidget);
+    setAccess(false);
     await tester.pump();
-
+    restart.gate!.complete();
+    await tester.pumpAndSettle();
+    expect(restart.calls, 1);
+    expect(find.text(currentAppLocalizations.vpnTip), findsOneWidget);
     expect(
       find.text(currentAppLocalizations.vpnConfigChangeDetected),
-      findsNothing,
+      findsOneWidget,
     );
-    await drainTimers(tester);
+
+    restart.gate = Completer<void>();
+    await tester.tap(find.text(currentAppLocalizations.restart));
+    await tester.pumpAndSettle();
+    await finish(tester);
+    restart.gate!.complete();
+    await tester.pump();
+    expect(tester.takeException(), isNull);
   });
 }

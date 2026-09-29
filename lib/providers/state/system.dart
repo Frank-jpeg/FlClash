@@ -95,6 +95,14 @@ VpnState vpnState(Ref ref) {
 }
 
 @riverpod
+bool vpnRestartRequired(Ref ref) {
+  final started = ref.watch(startedVpnStateProvider);
+  return ref.watch(isStartProvider) &&
+      started != null &&
+      ref.watch(vpnStateProvider) != started;
+}
+
+@riverpod
 PackageListSelectorState packageListSelectorState(Ref ref) {
   final packages = ref.watch(packagesProvider);
   final accessControlProps = ref.watch(

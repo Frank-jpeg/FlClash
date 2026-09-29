@@ -173,6 +173,48 @@ final class VpnStateProvider
 
 String _$vpnStateHash() => r'128ddad03ce045ad1f8204e47aec3cb6cfa29f6e';
 
+@ProviderFor(vpnRestartRequired)
+final vpnRestartRequiredProvider = VpnRestartRequiredProvider._();
+
+final class VpnRestartRequiredProvider
+    extends $FunctionalProvider<bool, bool, bool>
+    with $Provider<bool> {
+  VpnRestartRequiredProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'vpnRestartRequiredProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$vpnRestartRequiredHash();
+
+  @$internal
+  @override
+  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  bool create(Ref ref) {
+    return vpnRestartRequired(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$vpnRestartRequiredHash() =>
+    r'76af26b3adaa24562124aef2be5a709ff6e35eb6';
+
 @ProviderFor(packageListSelectorState)
 final packageListSelectorStateProvider = PackageListSelectorStateProvider._();
 

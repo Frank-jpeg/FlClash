@@ -92,6 +92,13 @@ class StatusManagerState extends ConsumerState<StatusManager> {
     return _actionMinDuration;
   }
 
+  void dismissMessage(String text) {
+    _bufferMessages.removeWhere((message) => message.text == text);
+    for (final entry in _visibleEntries.toList()) {
+      if (entry.message.text == text) _cancelMessage(entry.id);
+    }
+  }
+
   bool _isSameMessage(CommonMessage a, CommonMessage b) =>
       a.text == b.text && a.level == b.level;
 

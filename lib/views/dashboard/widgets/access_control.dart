@@ -48,7 +48,7 @@ class AccessControlCard extends ConsumerWidget {
             minVerticalPadding: 8,
             widget: const AccessView(),
           ),
-          if (ref.watch(isStartProvider))
+          if (ref.watch(vpnRestartRequiredProvider))
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
               child: Text(strings.vpnTip, style: context.textTheme.bodySmall),

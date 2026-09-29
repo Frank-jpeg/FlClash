@@ -56,8 +56,7 @@ class ServicePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
 
     private fun shutdown(result: MethodChannel.Result) {
         scope.launch {
-            ServiceController.unbind()
-            result.success(true)
+            result.success(ServiceState.requestStop().await())
         }
     }
 

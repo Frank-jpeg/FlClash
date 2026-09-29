@@ -181,7 +181,12 @@ class SetupAction extends _$SetupAction {
       if (request.running && ref.read(suspendProvider)) {
         return;
       }
-      await setCoreRunning(request.running);
+      final vpnState = ref.read(vpnStateProvider);
+      final accepted = await setCoreRunning(request.running);
+      if (!accepted) throw StateError('Core listener transition failed');
+      if (request.running && _isCurrent(request)) {
+        ref.read(startedVpnStateProvider.notifier).value = vpnState;
+      }
     });
   }
 
@@ -481,7 +486,6 @@ class SetupAction extends _$SetupAction {
       return _SetupTaskResult.completed;
     }
     if (system.isAndroid) {
-      globalState.lastVpnState = ref.read(vpnStateProvider);
       final sharedState = ref.read(sharedStateProvider);
       await preferences.saveShareState(sharedState);
     }

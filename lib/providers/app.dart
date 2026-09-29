@@ -15,6 +15,12 @@ import 'package:wifi_ssid/wifi_ssid.dart';
 part 'generated/app.g.dart';
 
 @Riverpod(keepAlive: true)
+class StartedVpnState extends _$StartedVpnState with AutoDisposeNotifierMixin {
+  @override
+  VpnState? build() => null;
+}
+
+@Riverpod(keepAlive: true)
 class AuthorizedTunEnable extends _$AuthorizedTunEnable
     with AutoDisposeNotifierMixin {
   @override
