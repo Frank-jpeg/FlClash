@@ -124,6 +124,9 @@ Release 资产保持 `FlClash-home-arm64-v8a.apk`、`FlClash-home-x86_64.apk` �
   home.2 完整检查已通过，APK 构建于 2026-09-29 21:52（UTC+8）成功完成。
   原始 artifact 为 `11037729767`，名称 `FlClash-home-a84c30cb5b7095474ddd141d5425880ef8013f0e`。
   Release APK 已核对构建提交、归档摘要、固定签名证书、包名及版本；设备复测由用户完成。
+- [云端签名发布](https://github.com/Frank-jpeg/FlClash/actions/runs/36581215822)已成功复用 home.2 构建，
+  两种架构的发布文件摘要与本机固定签名结果一致；tag 指向 `a84c30c`。
+  首页 ARM64 直链免登录返回 HTTP 200，文件类型为 APK；`Publish home APK` 已通过 actionlint 检查。
 - 本机有 Flutter/Android/JDK 环境；此次原生编译检查未完成，缓存的 Gradle 9.3.1 离线缺少
   `org.gradle.kotlin.kotlin-dsl:6.4.2`，仓库所需 Gradle 9.2.1 也未完成下载。不是源码编译通过记录。
 - Windows 本地较早一次全量测试出现 6 个路径分隔符相关失败，不能称其全绿；
