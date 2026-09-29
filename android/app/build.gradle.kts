@@ -6,7 +6,9 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-if (file("google-services.json").exists()) {
+if (providers.gradleProperty("enableFirebase").orNull == "true" &&
+    file("google-services.json").exists()
+) {
     apply(plugin = "com.google.gms.google-services")
     apply(plugin = "com.google.firebase.crashlytics")
 }

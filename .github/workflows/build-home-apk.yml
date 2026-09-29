@@ -35,6 +35,7 @@ jobs:
           channel: stable
           cache: true
       - uses: nttld/setup-ndk@v1
+        id: ndk
         with:
           ndk-version: r28c
       - uses: Swatinem/rust-cache@v2
@@ -42,6 +43,8 @@ jobs:
           workspaces: plugins/rust_api/rust
       - run: flutter pub get
       - name: Build Android arm64 and x86_64
+        env:
+          ANDROID_NDK_HOME: ${{ steps.ndk.outputs.ndk-path }}
         run: flutter build apk --release --split-per-abi --target-platform android-arm64,android-x64
       - uses: actions/upload-artifact@v4
         with:

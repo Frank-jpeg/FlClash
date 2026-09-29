@@ -2,6 +2,7 @@ part of '../state.dart';
 
 @riverpod
 UpdateParams updateParams(Ref ref) {
+  final tailscale = ref.watch(tailscaleSettingProvider);
   final routeMode = ref.watch(
     networkSettingProvider.select((state) => state.routeMode),
   );
@@ -11,7 +12,14 @@ UpdateParams updateParams(Ref ref) {
   return ref.watch(
     patchClashConfigProvider.select(
       (state) => UpdateParams(
-        tun: state.tun.getRealTun(routeMode),
+        tun: state.tun
+            .getRealTun(routeMode)
+            .copyWith(
+              routeAddress: tailscaleRouteAddresses(
+                state.tun.getRealTun(routeMode).routeAddress,
+                tailscale,
+              ),
+            ),
         authentication: authentication.credentials,
         allowLan: state.allowLan,
         findProcessMode: state.findProcessMode,
@@ -183,6 +191,7 @@ SharedState sharedState(Ref ref) {
     ),
   );
   final vpnSetting = ref.watch(vpnSettingProvider);
+  final tailscale = ref.watch(tailscaleSettingProvider);
   final currentProfileName = currentProfile.label;
   final selectedMap = currentProfile.selectedMap;
   final onlyStatisticsProxy = appSetting.onlyStatisticsProxy;
@@ -212,7 +221,10 @@ SharedState sharedState(Ref ref) {
       accessControlProps: vpnSetting.accessControlProps,
       allowBypass: vpnSetting.allowBypass,
       bypassDomain: networkSetting.bypassDomain,
-      routeAddress: clashConfig.routeAddress,
+      routeAddress: tailscaleRouteAddresses(
+        clashConfig.routeAddress,
+        tailscale,
+      ),
     ),
   );
 }

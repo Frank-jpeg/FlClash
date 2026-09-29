@@ -408,6 +408,27 @@ void main() {
     );
   });
 
+  test('Tailscale routes reach Android despite private bypass', () async {
+    await AppLocalizations.load(const Locale('en'));
+    container.listen(sharedStateProvider, (_, _) {});
+    container.listen(tailscaleSettingProvider, (_, _) {});
+    container
+        .read(networkSettingProvider.notifier)
+        .update((state) => state.copyWith(routeMode: RouteMode.bypassPrivate));
+    container.read(tailscaleSettingProvider.notifier).value =
+        const TailscaleProps(enable: true, subnets: ['192.168.7.0/24']);
+    expect(
+      container.read(sharedStateProvider).vpnOptions?.routeAddress,
+      containsAll(['100.64.0.0/10', 'fd7a:115c:a1e0::/48', '192.168.7.0/24']),
+    );
+    container.read(tailscaleSettingProvider.notifier).value =
+        const TailscaleProps();
+    expect(
+      container.read(sharedStateProvider).vpnOptions?.routeAddress,
+      defaultBypassPrivateRouteAddress,
+    );
+  });
+
   // VpnService.setHttpProxy cannot carry credentials.
   test('local authentication withholds the VPN system proxy', () async {
     await AppLocalizations.load(const Locale('en'));

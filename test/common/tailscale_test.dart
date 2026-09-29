@@ -114,4 +114,31 @@ void main() {
       throwsFormatException,
     );
   });
+
+  test(
+    'private bypass still captures tailnet and configured subnet routes',
+    () {
+      const settings = TailscaleProps(
+        enable: true,
+        subnets: ['192.168.7.0/24'],
+      );
+      expect(tailscaleRouteAddresses([], settings), isEmpty);
+      expect(tailscaleRouteAddresses(['8.0.0.0/5'], const TailscaleProps()), [
+        '8.0.0.0/5',
+      ]);
+      final config = applyTailscaleConfig({
+        'tun': {
+          'route-address': ['8.0.0.0/5'],
+          'stack': 'mixed',
+        },
+      }, settings);
+      expect(config['tun']['stack'], 'mixed');
+      expect(config['tun']['route-address'], [
+        '8.0.0.0/5',
+        '100.64.0.0/10',
+        'fd7a:115c:a1e0::/48',
+        '192.168.7.0/24',
+      ]);
+    },
+  );
 }

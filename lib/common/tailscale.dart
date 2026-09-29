@@ -2,6 +2,19 @@ import 'dart:io';
 
 import 'package:fl_clash/models/models.dart';
 
+List<String> tailscaleRouteAddresses(
+  List<String> routes,
+  TailscaleProps settings,
+) {
+  if (!settings.enable || routes.isEmpty) return routes;
+  return {
+    ...routes,
+    '100.64.0.0/10',
+    'fd7a:115c:a1e0::/48',
+    ...settings.subnets,
+  }.toList();
+}
+
 bool isTailscaleSubnet(String value) {
   final parts = value.trim().split('/');
   if (parts.length != 2) return false;
@@ -43,6 +56,11 @@ Map<String, dynamic> applyTailscaleConfig(
   );
   policy['+.ts.net'] = 'tailscale://$name';
   dns['nameserver-policy'] = policy;
+  final tun = Map<String, dynamic>.from(config['tun'] as Map? ?? {});
+  tun['route-address'] = tailscaleRouteAddresses(
+    List<String>.from(tun['route-address'] as List? ?? []),
+    settings,
+  );
   final tailnetRules = [
     'DOMAIN-SUFFIX,ts.net,$name',
     'IP-CIDR,100.64.0.0/10,$name,no-resolve',
@@ -54,6 +72,7 @@ Map<String, dynamic> applyTailscaleConfig(
     ...config,
     'proxies': proxies,
     'dns': dns,
+    'tun': tun,
     'rules': [...tailnetRules, ...(config['rules'] as List? ?? [])],
   };
 }
