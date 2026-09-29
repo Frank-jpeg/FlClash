@@ -6,6 +6,13 @@
 
 ## FlClash
 
+This branch contains **FlClash Home for Android**, based on upstream v0.8.98: home-screen
+per-app VPN controls, Google Play component visibility fixes, and Tailscale private-network settings.
+It is maintained in the public [Frank-jpeg/FlClash fork](https://github.com/Frank-jpeg/FlClash), on
+[`feature/android-home-tailscale`](https://github.com/Frank-jpeg/FlClash/tree/feature/android-home-tailscale).
+See the [usage guide](docs/HOME-ANDROID.md) and [build, update, and verification notes](docs/HOME-MAINTENANCE.md).
+The badges and download links below refer to upstream FlClash, not the custom APK.
+
 [![Downloads](https://img.shields.io/github/downloads/chen08209/FlClash/total?style=flat-square&logo=github)](https://github.com/chen08209/FlClash/releases/)[![Last Version](https://img.shields.io/github/release/chen08209/FlClash/all.svg?style=flat-square)](https://github.com/chen08209/FlClash/releases/)[![License](https://img.shields.io/github/license/chen08209/FlClash?style=flat-square)](LICENSE)
 
 [![Channel](https://img.shields.io/badge/Telegram-Channel-blue?style=flat-square&logo=telegram)](https://t.me/FlClash)
@@ -74,7 +81,8 @@ brew install --cask flclash
    git submodule update --init --recursive
    ```
 
-2. Install `Flutter` and `Golang` environment
+2. Install `Flutter`, `Golang`, and `Rust` (including a host C/C++ linker).
+   Use the versions pinned by the workflow you are building; the Android Home workflow uses Flutter 3.47.4.
 
 3. Build Application
 
@@ -82,7 +90,7 @@ brew install --cask flclash
 
         1. Install `Android SDK`, `Android NDK`
 
-        2. Set `ANDROID_NDK` environment variable
+        2. Set `ANDROID_NDK_HOME` to NDK r28c (`28.2.13676358`), and use JDK 17.
 
         3. Run build script
 

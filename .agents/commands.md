@@ -2,6 +2,9 @@
 
 ## Building
 
+For the Android Home fork, use [the maintenance guide](../docs/HOME-MAINTENANCE.md).
+It defines the custom APK workflow, explicit NDK selection, signing, and upstream merges.
+
 Update submodules first. The ClashMeta Go core lives in `core/Clash.Meta/`.
 
 ```bash
@@ -21,7 +24,8 @@ The Go core and the Rust helper build automatically: Flutter runs
 `plugins/setup/hook/build.dart` on every `flutter build` and `flutter test`,
 and the hook drives `CoreBuilder` from the `setup_hooks` package in
 `plugins/setup/setup_hooks/`. Android builds take the NDK from the C compiler
-Flutter hands the hook; no `ANDROID_NDK` variable is needed.
+Flutter hands the hook. Set `ANDROID_NDK_HOME` on the Flutter process to select r28c;
+the hook itself does not read the obsolete `ANDROID_NDK` variable.
 Artifacts land in `libclash/`. The hook reruns only when Go, Rust, or
 `setup_hooks` inputs change; the fingerprint cache lives in
 `.dart_tool/setup_build_cache/`. To force a rebuild, delete that directory:
@@ -59,7 +63,8 @@ the hooks again.
 
 ## Flutter Development
 
-Use the default Flutter SDK directly:
+Select the Flutter SDK pinned by the relevant workflow before running these commands;
+the first `flutter` on a machine's PATH may be an older installation:
 
 ```bash
 flutter pub get
@@ -256,7 +261,10 @@ dart run tool/check_coverage.dart coverage/lcov.info 75
 
 Run `flutter analyze` locally before committing when practical.
 
-Release builds run only for `v*` tag pushes; pull requests trigger nothing.
+The upstream-style release build in `build.yaml` runs only for `v*` tag pushes;
+pull requests trigger nothing. The separate `build-home-apk.yml` also builds on
+matching source changes on `feature/android-home-tailscale`, or manual dispatch,
+and uploads APK artifacts without creating a GitHub release.
 Root analysis excludes `plugins/**`, and root tests do not discover nested
 plugin packages, so parallel jobs validate the rest from their own package
 directories: `plugins` (local Flutter packages and the setup build tool), `go`

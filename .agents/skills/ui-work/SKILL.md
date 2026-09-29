@@ -105,5 +105,5 @@ is what makes a scale grow without bound.
 
 - `CoreStatusButton` watches `coreStatusProvider` but keeps its 600-millisecond connecting hold locally. Taps are ignored
   during the hold or genuine connecting state; disconnected cancels the hold immediately.
-- Proxy delay testing writes `0` while pending, the measured delay on success, and `-1` on failure. `DelayTestButton` resets
-  its animation in `finally`.
+- Proxy delay testing tracks in-flight keys in `pendingDelayTestsProvider` and releases them in `finally`.
+  Missing responses and exceptions preserve previous measurements; pending state is not represented by a zero delay.

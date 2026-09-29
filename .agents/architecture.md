@@ -1,5 +1,33 @@
 # Architecture
 
+## Android Home Customizations
+
+- `AccessControlCard` uses `vpnSettingProvider.accessControlProps` directly and opens `AccessView`.
+  There is no second VPN controller. Active Android VPN changes still require restarting the VPN.
+- `vpnRestartRequiredProvider` compares current settings with `startedVpnStateProvider`, captured before the accepted
+  current start request. Profile reloads do not reset that snapshot. Both toggle directions can require a restart;
+  reverting settings or stopping clears the hint. `VpnManager` uses the same state for its notification and delegates
+  restart to `CoreAction.restartCore`, without the former ten-second notification throttle. A failed handoff does not
+  mark settings as applied; edits made during a handoff are compared against the submitted snapshot.
+- `lib/common/access_control.dart` keeps installed Google Play components visible through both package-filter paths.
+  Saving `AccessView` deduplicates and sorts selections without deleting hidden packages.
+- `TailscaleProps` is part of `Config`; `tailscaleSettingProvider` participates in save, startup overrides, and restore.
+  `TailscaleView` saves settings and requests `SetupAction.applyProfile`, selecting rule mode when enabled.
+- After subscription/script/custom-rule processing, `makeRealProfileTask` applies `applyTailscaleConfig` before YAML
+  encoding. It appends a collision-safe `type: tailscale` proxy, prepends tailnet/subnet rules, and merges the
+  `+.ts.net` DNS policy. The mihomo implementation remains in `core/Clash.Meta/adapter/outbound/tailscale.go`.
+- `tailscaleRouteAddresses` augments restricted VPN routes in generated YAML, `UpdateParams`, and Android `SharedState`.
+  An empty route list already means full routing; it stays empty. This keeps private-network bypass from excluding
+  the tailnet and explicitly configured subnets.
+- Identity is stored at the core-relative `tailscale/flclash-home` directory. Auth Key input is visually hidden,
+  but an uncleared value is serialized with configuration and may be exported in backups. No exit node is configured.
+- The `repository` constant routes update checks, the download page, and the About project link to `Frank-jpeg/FlClash`.
+  `Request.checkForUpdate` reads the latest stable GitHub Release; `compareVersions` supports `v` and `-home.N` tags.
+  Updates open a download page; the application neither installs APKs nor merges upstream source automatically.
+
+Usage, build/signing, and the actual verification boundary are maintained in
+[the home guide](../docs/HOME-ANDROID.md) and [maintenance notes](../docs/HOME-MAINTENANCE.md).
+
 ## Core Integration
 
 The Go proxy core in `core/` operates in two modes.
@@ -122,6 +150,8 @@ Android deliberately keeps Flutter requests optimistic and the native layer auth
 
 - `ServicePlugin.start()` and `stop()` acknowledge immediately after submitting intent. They do not wait for service
   creation, VPN permission, binding, TUN establishment, or teardown.
+- `ServicePlugin.shutdown()` awaits `ServiceState.requestStop()` so Core restart waits for teardown. A superseded or
+  failed native stop is returned as false instead of reporting successful shutdown after unbinding alone.
 - `ServiceState` owns the latest `RunRequest`, shared configuration, run time, and `STOPPED`/`STARTING`/`STARTED`/`STOPPING`
   state. Identity checks discard obsolete work. `startPreparationLock` serializes permission/setup preparation and
   `transitionLock` serializes actual service transitions.
@@ -179,9 +209,9 @@ surface. It is shown only outside dashboard edit mode and only when `coreLib == 
 - Taps during the display hold or while the provider is genuinely connecting are inert. Connected/disconnected taps show
   the appropriate confirmation and delegate restart to `CoreAction`; the widget never starts Core directly.
 
-Proxy delay testing follows the same failure-safe UI rule. `proxyDelayTest()` records an in-progress zero delay, writes the
-real result on success, and logs plus records `-1` on exceptions. `DelayTestButton` reverses its animation in `finally`, so
-an RPC failure cannot leave the control permanently spinning.
+Proxy delay testing keeps in-flight keys in `pendingDelayTestsProvider` and releases them in `finally`.
+`ProxiesAction` records only returned measurements; a missing response or exception preserves the previous measurement,
+and a Core-unavailable error cancels the job. Pending state is not encoded as a zero delay.
 
 ## Settings Rows
 
@@ -471,6 +501,7 @@ What the hook protocol forces:
 
 - Android derives the per-ABI clang wrapper from the C compiler and `targetNdkApi` (the app's `minSdk`) Flutter
   passes; `hooks_runner` filters the environment, so `ANDROID_NDK` is not read.
+  Select that compiler before hook execution with `ANDROID_NDK_HOME` on the Flutter process.
 - `PATH` arrives unextended, so `runCommand` appends the Homebrew, Go and rustup locations that Xcode's and Gradle's
   stripped `PATH` hides.
 - The hook does not know the build mode: the protocol carries none and `linkingEnabled` only says whether link hooks

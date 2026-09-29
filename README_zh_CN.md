@@ -6,6 +6,13 @@
 
 ## FlClash
 
+此分支是基于上游 v0.8.98 的 **FlClash 安卓首页版**，加入首页分应用开关、Google Play
+组件显示修复和 Tailscale 内网设置。代码保存在公开仓库
+[Frank-jpeg/FlClash](https://github.com/Frank-jpeg/FlClash) 的
+[`feature/android-home-tailscale`](https://github.com/Frank-jpeg/FlClash/tree/feature/android-home-tailscale) 分支。
+参阅[使用说明](docs/HOME-ANDROID.md)和[构建、更新与验证记录](docs/HOME-MAINTENANCE.md)。
+下方徽章和下载链接属于上游原版；定制 APK 的获取方式见使用说明。
+
 [![Downloads](https://img.shields.io/github/downloads/chen08209/FlClash/total?style=flat-square&logo=github)](https://github.com/chen08209/FlClash/releases/)[![Last Version](https://img.shields.io/github/release/chen08209/FlClash/all.svg?style=flat-square)](https://github.com/chen08209/FlClash/releases/)[![License](https://img.shields.io/github/license/chen08209/FlClash?style=flat-square)](LICENSE)
 
 [![Channel](https://img.shields.io/badge/Telegram-Channel-blue?style=flat-square&logo=telegram)](https://t.me/FlClash)
@@ -74,7 +81,8 @@ brew install --cask flclash
    git submodule update --init --recursive
    ```
 
-2. 安装 `Flutter` 以及 `Golang` 环境
+2. 安装 `Flutter`、`Golang`、`Rust` 及宿主机 C/C++ 链接工具。
+   使用对应工作流固定的版本；安卓首页版工作流使用 Flutter 3.47.4。
 
 3. 构建应用
 
@@ -82,7 +90,7 @@ brew install --cask flclash
 
         1. 安装  `Android SDK` ,  `Android NDK`
 
-        2. 设置 `ANDROID_NDK` 环境变量
+        2. 将 `ANDROID_NDK_HOME` 指向 NDK r28c（`28.2.13676358`），使用 JDK 17。
 
         3. 运行构建脚本
 

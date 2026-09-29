@@ -10,6 +10,10 @@ Read these files before making changes:
 - [.agents/project.md](.agents/project.md): project overview, versions, and build dependencies.
 - [.agents/commands.md](.agents/commands.md): build, development, code generation, and test commands.
 - [.agents/rules.md](.agents/rules.md): lint, testing, generated-code, and workflow rules.
+- [docs/HOME-MAINTENANCE.md](docs/HOME-MAINTENANCE.md): Android fork ownership, build/signing, update workflow,
+  and verified versus unverified behavior. Keep the custom package identity and signing key stable across updates.
+- If `docs/HOME-LOCAL.md` exists, read it for machine-specific paths and the current handoff constraints.
+  It is intentionally ignored; never force-add it or signing credentials to Git.
 
 Read these only when the task touches their area:
 

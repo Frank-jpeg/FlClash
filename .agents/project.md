@@ -1,139 +1,64 @@
 # Project Context
 
-FlClash is a multi-platform proxy client based on ClashMeta (mihomo), built with Flutter. It supports Android, Windows, macOS, and Linux, using a Material You design with Surfboard-like UI.
+FlClash is a Flutter client built around the ClashMeta/mihomo core. This checkout is the Android Home customization in
+`Frank-jpeg/FlClash`; its upstream is `chen08209/FlClash`. Fork ownership, branch policy, build/signing, and verification
+are defined in [the maintenance guide](../docs/HOME-MAINTENANCE.md).
 
-## Version Notes
+## Version Sources
 
-- Release CI pins Flutter 3.47.1. Local SDK may diverge, so trust the CI
-  version as the source of truth for release builds.
-- Dart SDK constraint: `>=3.8.0 <4.0.0`. The lower bound is load-bearing and
-  must not be raised to the Dart version the SDK actually ships; see
-  Dependency Ceilings.
+- `pubspec.yaml` defines the application version and Dart language constraint; the constraint is `>=3.10.0 <4.0.0`.
+- `.github/workflows/build-home-apk.yml` pins Flutter 3.47.4 for the Android Home APK.
+- `.github/workflows/build.yaml` retains Flutter 3.47.1 for the upstream-style validation/release pipeline.
+  Both workflows were exercised for this fork; do not infer the APK SDK from the other workflow.
+- `plugins/rust_api/rust/rust-toolchain.toml` pins Rust 1.95.0 and its supported targets.
+- Go 1.26.4, JDK 17, and NDK r28c are used by the Home APK workflow.
+- `pubspec.lock` is the authority for resolved dependencies. Change the language floor and generator versions
+  deliberately, then regenerate and verify generated code; do not copy obsolete dependency ceilings into new changes.
 
 ## Forked Dependencies
 
-Three `pubspec.yaml` dependencies are pinned to a fork — `window_manager` by tag,
-the other two by commit SHA. All three
-forks live under `chen08209`, the same account that owns this repository, so they
-are maintained in-house rather than tracked from a third party: advancing a pin
-is a local decision, and there is no external maintainer to wait on for the patch
-itself. What each fork still waits on is the *upstream* fix that would let the
-pin be dropped entirely, recorded below.
+These dependencies remain under the upstream maintainer's `chen08209` account. They are external dependencies of
+`Frank-jpeg/FlClash`; maintaining this application fork does not grant ownership of those dependency repositories.
 
-Each entry records what the fork changes and what has to be true before it can go
-back to the published package, so a future upgrade does not have to rediscover it.
-Re-verify a fork by diffing its pub cache checkout against the published version
-of the same number:
+| Dependency | Pin in `pubspec.yaml` | Purpose |
+| --- | --- | --- |
+| `window_manager` | `v0.5.1-flclash.3`, `packages/window_manager` | FlClash desktop window integration |
+| `launch_at_startup` | `e930ce65c5804343103447e01d39fccabedc8681` | Compatible Windows registry dependency |
+| `yaml_writer` | `79c78a44ec9c2f5f5f97da1a65610c6fb2ead8b3` | Quoted YAML map keys |
 
-```bash
-diff -ru ~/.pub-cache/hosted/pub.dev/<name>-<version> ~/.pub-cache/git/<name>-<sha>
-```
+Before dropping a fork pin, compare its changes with the proposed published dependency and verify its callers.
+Keep the license and upstream attribution when updating or redistributing the application.
 
-`window_manager` — `chen08209/window_manager`, path `packages/window_manager`,
-version 0.5.1, pinned to the tag `v0.5.1-flclash.1` because the fork carries
-commits of its own rather than a single patch on top of a release.
+## Dependency Compatibility
 
-- `windows/window_manager_plugin.cpp`: with `titleBarStyle: hidden` a maximized
-  window uses the monitor work area (`GetMonitorInfo().rcWork`) instead of
-  upstream's `adjustNCCALCSIZE` border fudge, so it no longer covers the taskbar.
-- `linux/window_manager_plugin.cc`: GTK drops the placement of an unmapped
-  window, so `hide` saves the geometry and the `map-event` handler applies it
-  again. Upstream only moves the window while it is hidden, which a window
-  manager is free to ignore — the window then reappears wherever it decides to
-  place it, which on this repository's Linux runner is every appearance after the
-  first, because `my_application.cc` never shows the toplevel itself.
-- Adds `setWindowCornerPreference` (Windows) and `handleShouldTerminate` /
-  `onWindowShouldTerminate` (macOS). These lived in a local `window_ext` plugin
-  until they moved here; `lib/manager/window_manager.dart` and
-  `macos/Runner/AppDelegate.swift` are the callers.
-- Drop the fork once upstream carries all three. The added APIs have call sites,
-  so this is not a pin change alone.
+The 2026-09-29 lockfile resolves `analyzer` 13.3.0, `freezed` 4.0.1, `riverpod` / `flutter_riverpod` 3.4.2,
+`riverpod_annotation` 4.0.6, and `riverpod_generator` 4.0.8. `dynamic_color` resolves to 2.1.0.
+Update these as a compatible dependency set rather than imposing an obsolete analyzer or generator ceiling.
 
-`launch_at_startup` — `chen08209/launch_at_startup`, version 0.5.1.
-
-- Migrates `win32_registry` from `^2.0.0` to `^3.0.3`, which is a breaking rename
-  across the whole Windows implementation (`Registry.openPath` → `CURRENT_USER.open`,
-  `createValue` → `setValue`, `getStringValue` → `getString`).
-- This one is not optional while it lasts: FlClash depends on `win32_registry: ^3.0.3`
-  directly, and upstream's `^2.0.0` constraint cannot co-resolve with it.
-- Drop the fork when upstream publishes a release that accepts `win32_registry` 3.x.
-
-`yaml_writer` — `chen08209/yaml_writer`, version 2.1.0.
-
-- Adds `StringNode.quoteKey()` and applies it to map keys in `lib/src/node.dart`.
-  Upstream quotes values but emits keys verbatim, so a profile key needing quotes
-  is written as invalid YAML.
-- Drop the fork once upstream quotes map keys by the same
-  `isValidUnquotedString` rule it already applies to values.
-
-## Dependency Ceilings
-
-Several dependencies cannot be advanced from this repository, and re-running
-`flutter pub outdated` will keep listing them. The blocker is upstream in every
-case, so treat the list as resolved-until-the-ceiling-moves rather than as debt:
-
-`freezed` is pinned exactly to `3.2.6-dev.1`, which is a pre-release *ahead* of
-the newest stable `3.2.5`. It is not a stale pin and must not be "fixed" by
-moving to `3.2.5`: stable `3.2.5` requires `analyzer >=9.0.0 <11.0.0`, while the
-pinned Flutter SDK resolves `analyzer` 12. `3.2.6-dev.1` is the only published
-freezed release that accepts `analyzer` 12. Move to a stable release only once
-one exists that accepts the analyzer the SDK actually resolves.
-
-The `>=3.8.0` Dart lower bound is a language-version floor, not a stale minimum.
-Dart 3.13 makes `final` on a parameter an error, and `freezed` still emits it in
-the constructors it generates for every collection field it backs with a private
-field (`const _LogsState({final  List<Log> logs = const [], ...})`); 4.0.0-dev.3
-emits it too. A pubspec's lower bound sets the package language version, so
-`>=3.8.0` keeps that generated code legal while the SDK itself runs 3.13. Raising
-the bound makes every `*.freezed.dart` fail to parse, which `flutter analyze`
-does not catch because `lib/**/generated/**` is excluded. Raise it only once
-freezed stops emitting the modifier.
-
-One `analyzer` ceiling holds most of the remaining `flutter pub outdated` list.
-The newest `build_runner`, `drift_dev`, `intl_utils`, `test`, and
-`riverpod_generator` all require `analyzer` 13; `test` 1.31.2 additionally
-requires `test_api` 0.7.13, while `flutter_test` from the pinned SDK depends on
-`test_api` 0.7.12. Raising any of those bounds therefore fails version solving.
-
-The `riverpod` chain is the visible symptom. It is held at
-`riverpod`/`flutter_riverpod` 3.3.2, `riverpod_annotation` 4.0.3, and
-`riverpod_generator` 4.0.4 as one rigid unit, because `riverpod_annotation`
-4.0.3 depends on `riverpod` exactly 3.3.2: the runtime cannot move without the
-generator, and the generator cannot move without `analyzer` 13. Retry the whole
-set after a Flutter SDK bump raises `test_api`, not before.
-
-`intl` is intentionally unbounded (`any`) and `material_color_utilities` is
-resolved by the SDK; neither is a bound this repository sets.
-
-`isolate_contactor` is discontinued and `isolate_manager` is several majors
-behind. Both arrive through `re_editor`, which pins `isolate_manager: ^4.1.5+1`
-and is already at its own latest release. Nothing in this repository can advance
-them.
-
-`CorePalette` is deprecated in `material_color_utilities` in favour of
-`DynamicScheme`/`CorePalettes`, but `dynamic_color` 1.9.0 — its newest release —
-still exposes only `DynamicColorPlugin.getCorePalette()`, which returns the
-deprecated type. There is no migration available from this repository short of
-calling the `io.material.plugins/dynamic_color` method channel directly and
-decoding the palette int list by hand, which is not worth owning. The deprecated
-type is therefore confined to `GlobalState._initDynamicColor`, which converts it
-to the two plain seed colours the app actually consumes; everything downstream
-sees `DynamicColorSeeds`. Revisit when `dynamic_color` ships a non-deprecated
-accessor — only that one function has to change.
+`flutter_test` constrains `test_api`; this lockfile has `test` 1.31.1 and `test_api` 0.7.12. Evaluate upgrades as a
+compatible dependency set using the selected Flutter SDK. A `pub outdated` notice alone is not a reason to change pins.
+`intl` is intentionally unconstrained in `pubspec.yaml` and is resolved with the Flutter dependency graph.
 
 ## Build Dependencies
 
-Linux:
+Every platform needs Flutter, Go, Rust/Cargo, and the host tools needed to compile Rust build scripts.
+An existing Flutter/Android SDK installation is useful even when a separate native tool is missing;
+check actual executables and versions before choosing local versus cloud builds.
+
+Android additionally needs JDK 17 and Android SDK/NDK. Set `ANDROID_NDK_HOME` to r28c before running Flutter;
+Gradle's `ndkVersion` alone does not guarantee the native-asset hook receives that NDK.
+On Windows, the Rust MSVC host toolchain also needs the Visual C++ linker and Windows SDK.
+
+Linux desktop:
 
 ```bash
 sudo apt-get install libayatana-appindicator3-dev
 ```
 
-Windows:
+Windows desktop packaging additionally uses the existing GCC / Inno Setup workflow. Check the C++ and Rust
+host prerequisites separately; installing an Android NDK does not provide the Windows MSVC linker.
 
-- GCC and Inno Setup.
-
-macOS:
+macOS packaging:
 
 ```bash
 npm install -g appdmg

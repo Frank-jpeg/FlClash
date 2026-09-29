@@ -3,16 +3,45 @@
 基于上游正式版 v0.8.98，保留上游 GPL-3.0 许可证。定制版包名为
 `com.follow.clash.home`，可与原版同时安装，两者配置独立。
 
+## 安装与更新
+
+普通安卓手机使用 `FlClash-home-0.8.98-arm64-v8a.apk`，x86_64 模拟器使用对应 x86_64 APK。
+2026-09-29 交付的两份安装包已用同一固定签名签署；后续使用相同包名、相同签名的新版本
+覆盖安装，通常可保留配置。首次使用需自行导入原有配置或订阅。
+
+新版 `0.8.98-home.2+2026092902` 由 [GitHub Actions 自动构建](https://github.com/Frank-jpeg/FlClash/actions/runs/36576531323)。
+构建成功后，在页面底部 **Artifacts** 下载 `FlClash-home-a84c30cb5b7095474ddd141d5425880ef8013f0e`，
+解压后手机选 `app-arm64-v8a-release.apk`，模拟器选 `app-x86_64-release.apk`；通常需要登录 GitHub。
+云端产物使用临时 debug 签名，不能保证覆盖旧的固定签名版；覆盖升级前仍需用原密钥重签。
+Actions artifact 不是 GitHub Release，且有保存期限。
+
+源码位于公开仓库 [Frank-jpeg/FlClash](https://github.com/Frank-jpeg/FlClash) 的
+[`feature/android-home-tailscale`](https://github.com/Frank-jpeg/FlClash/tree/feature/android-home-tailscale) 分支。
+仓库 README 中保留的原版下载链接不包含本定制功能。
+当前源码的手动、自动检查更新及更新下载页均指向本 Fork 的 GitHub Releases，支持 `-home.N`
+版本号。发现新版后打开下载页，由用户下载安装；目前尚未发布定制版 Release。
+已交付的旧 APK 对应提交 `552585e`，尚未包含更新源和重启提醒修正，需要安装新 APK 后生效。
+上游更新仍需合并、重新打包并使用固定签名发布，应用不会自动合并上游代码。
+构建方式及上游同步步骤见[维护说明](HOME-MAINTENANCE.md)。
+
 ## 应用分流
 
 首页的“应用访问控制”可直接开关，并进入应用名单。白名单模式下，选中的应用进入
-VPN；黑名单模式下，选中的应用绕过 VPN。修改后，正在运行的 VPN 需要停止再启动。
+VPN；黑名单模式下，选中的应用绕过 VPN。运行中打开或关闭此功能、修改名单均需重启。
+当前源码会在存在未应用设置时显示提醒，重启提交成功或改回原设置后清除提醒；未运行时下次启动生效。
+重启失败时保留待处理状态，允许重试。这些修正尚未包含在上述旧 APK 中。
 
 应用列表始终显示已安装的 Google Play 商店、Google Play 服务、Google 服务框架和
 下载管理器，即使开启了隐藏系统应用。工具栏的 Google Play 快捷按钮会把这些组件加入
 VPN 范围；操作后仍需保存名单。隐藏应用的已有选择不会再因为保存而被清除。
 
 进入 VPN 只表示交给 FlClash 处理，最终是否走代理还取决于订阅规则和节点可用性。
+
+## 规则编辑
+
+首页“出站模式 → 规则”使用当前配置的规则。添加自己的规则：
+**配置 → 当前订阅右侧 ⋮ → 更多 → 覆写 → 标准 → 附加规则 → 添加**。
+订阅原有规则可在该菜单的“预览”中查看 `rules`；修改覆写规则后保存。
 
 ## Tailscale 内网
 
@@ -24,7 +53,7 @@ VPN 范围；操作后仍需保存名单。隐藏应用的已有选择不会再�
 5. 访问家里或公司的其他局域网设备时，填写对应网段，例如 `192.168.1.0/24`。
    网络中需已有 Tailscale 子网路由器，路由需在管理后台批准，访问权限需允许该设备。
 6. 保存后切换到规则模式。启动 FlClash VPN，访问内网地址会触发 Tailscale 连接。
-   如果刚修改了子网或应用名单，请重启 VPN。
+   修改子网或应用名单后，请重启 VPN。
 
 用于访问内网的浏览器、远程桌面或 NAS 应用需要包含在 FlClash 的 VPN 应用范围内。
 此功能只分流 Tailscale 地址和填写的子网，其余流量遵循原订阅规则，不使用出口节点。
@@ -34,28 +63,16 @@ VPN 范围；操作后仍需保存名单。隐藏应用的已有选择不会再�
 Auth Key 在输入时隐藏；未清空前会随本应用配置保存，导出的配置备份也可能包含它。
 不要公开带密钥的配置或备份。页面“已启用”表示设置开启，不代表已完成登录或连通性验证。
 
-## 构建
+## 名称、图标与 PRE 标记
 
-工作流 `.github/workflows/build-home-apk.yml` 编译 arm64 手机 APK 和 x86_64 模拟器 APK。
-工具链为 Flutter 3.47.4、Go 1.26.4、JDK 17、NDK r28c，并安装 Rust。
-运行构建时将 `ANDROID_NDK_HOME` 指向 r28c，确保原生构建钩子使用正确 NDK。
-
-```sh
-git submodule update --init --recursive
-flutter pub get
-flutter build apk --release --split-per-abi --target-platform android-arm64,android-x64
-```
-
-`pubspec.yaml` 的两个 `build_assets` 开关必须为 `true`，才能包含 Go 内核和 Rust 库。
-运行不加载原生库的 Flutter 测试时可以临时改为 `false`，测试后恢复，不能提交关闭状态。
-
-默认不启用 Firebase 构建插件。只有提供匹配定制版包名的 `google-services.json`，并显式
-设置 Gradle 属性 `enableFirebase=true` 时才启用。现成的上游占位配置不能用于此包名。
-没有个人签名配置时，CI 产物使用临时 debug 签名；交付手机的版本应统一使用本地保存的
-签名重新签署，以便后续覆盖升级。签名私钥和密码不得提交到仓库。
+安卓应用目前显示为“FlClash 首页版”。桌面图标和控制中心快捷磁贴图标保持原样。
+右上角红色 `PRE` 是构建环境的预发布标记：未指定 `APP_ENV` 时默认显示，和密钥扫描告警无关。
+Release 编译不会自动去掉它；构建时指定 `--dart-define=APP_ENV=stable` 才使用稳定版环境。
 
 ## 验证范围
 
-相关自动化测试覆盖应用名单保留、Google 组件过滤与快捷选择、首页开关同步、Tailscale
-配置持久化、路由与 DNS 合并、最终 YAML 优先级及小屏表单校验。
-真实 NAS 连通性需要用户自己的 Tailscale 授权和设备；没有实际连接证据时不视为通过。
+`adeaec3` 对应的 2026-09-29 云端检查通过 1862 项 Flutter 测试、覆盖率检查和安卓原生单元测试。
+更新源及重启提醒修正在本机通过相关 Flutter 测试；新构建和完整检查的状态见[维护说明](HOME-MAINTENANCE.md)。
+MuMu 已完成安装、启动、首页入口显示、系统下载管理器显示及快捷选择的部分检查。
+用户已接手后续测试；尚无 VPN 启动、真实 Google Play 登录/下载、Tailscale 登录与 NAS 连通性的
+逐项实机通过记录。自动化测试通过不代表这些真实网络场景已经验证。
