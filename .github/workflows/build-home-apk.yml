@@ -48,6 +48,6 @@ jobs:
         run: flutter build apk --release --split-per-abi --target-platform android-arm64,android-x64
       - uses: actions/upload-artifact@v4
         with:
-          name: FlClash-home-0.8.98
+          name: FlClash-home-${{ github.sha }}
           path: build/app/outputs/flutter-apk/*.apk
           if-no-files-found: error
