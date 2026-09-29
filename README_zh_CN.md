@@ -4,6 +4,21 @@
 
 </div>
 
+## 安卓首页版下载
+
+### [⬇ 下载安卓手机 APK](https://github.com/Frank-jpeg/FlClash/releases/latest/download/FlClash-home-arm64-v8a.apk)
+
+**ARM64 · APK** — 点击直接下载，下载后安装，无需解压或登录 GitHub。
+
+[x86_64 模拟器 APK](https://github.com/Frank-jpeg/FlClash/releases/latest/download/FlClash-home-x86_64.apk) ·
+[更新记录](https://github.com/Frank-jpeg/FlClash/releases/latest) ·
+[使用说明](https://github.com/Frank-jpeg/FlClash/blob/feature/android-home-tailscale/docs/HOME-ANDROID.md)
+
+发布的 APK 沿用首页版固定签名，可覆盖之前的固定签名首页版。
+线上构建成功后自动签名发布，此链接始终指向最新发布版。
+
+安卓定制源码在 [feature/android-home-tailscale](https://github.com/Frank-jpeg/FlClash/tree/feature/android-home-tailscale) 分支，以下保留上游原版说明。
+
 ## FlClash
 
 [![Downloads](https://img.shields.io/github/downloads/chen08209/FlClash/total?style=flat-square&logo=github)](https://github.com/chen08209/FlClash/releases/)[![Last Version](https://img.shields.io/github/release/chen08209/FlClash/all.svg?style=flat-square)](https://github.com/chen08209/FlClash/releases/)[![License](https://img.shields.io/github/license/chen08209/FlClash?style=flat-square)](LICENSE)
@@ -54,6 +69,10 @@
    ```
 
 ## Download
+
+[**下载安卓首页版 APK（ARM64）**](https://github.com/Frank-jpeg/FlClash/releases/latest/download/FlClash-home-arm64-v8a.apk)
+
+### 上游原版 FlClash
 
 <a href="https://chen08209.github.io/FlClash-fdroid-repo/repo?fingerprint=789D6D32668712EF7672F9E58DEEB15FBD6DCEEC5AE7A4371EA72F2AAE8A12FD"><img alt="Get it on F-Droid" src="snapshots/get-it-on-fdroid.svg" width="200px"/></a> <a href="https://github.com/chen08209/FlClash/releases"><img alt="Get it on GitHub" src="snapshots/get-it-on-github.svg" width="200px"/></a>
 
