@@ -284,12 +284,15 @@ void main() {
     expect(find.byKey(const ValueKey('edit-icon')), findsOneWidget);
   });
 
-  testWidgets('inactive page scope exits access search layer', (tester) async {
+  testWidgets('access search stays visible without adding a back layer', (
+    tester,
+  ) async {
     final container = ProviderContainer();
     addTearDown(container.dispose);
     globalState.container = container;
     final isActive = ValueNotifier(true);
     addTearDown(isActive.dispose);
+    var rootBackCount = 0;
 
     await tester.pumpWidget(
       UncontrolledProviderScope(
@@ -297,23 +300,38 @@ void main() {
         child: _DashboardTestApp(
           child: _PageActivityTestScope(
             isActive: isActive,
-            child: const AccessView(),
+            child: CommonPopScope(
+              onPop: (_) {
+                rootBackCount++;
+                return false;
+              },
+              child: const AccessView(),
+            ),
           ),
         ),
       ),
     );
     await tester.pump(const Duration(milliseconds: 301));
 
-    await tester.tap(find.byIcon(Icons.more_vert));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byIcon(Icons.search));
+    final search = find.byType(TextField);
+    expect(search, findsOneWidget);
+    await tester.enterText(search, 'browser');
     await tester.pumpAndSettle();
     expect(find.byType(TextField), findsOneWidget);
 
     isActive.value = false;
     await tester.pumpAndSettle();
 
-    expect(find.byType(TextField), findsNothing);
+    expect(search, findsOneWidget);
+    expect(container.read(queryProvider(QueryTag.access)), 'browser');
+
+    isActive.value = true;
+    await tester.pumpAndSettle();
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+
+    expect(rootBackCount, 1);
+    expect(search, findsOneWidget);
   });
 
   testWidgets('save and system back cannot re-enter dashboard edit mode', (
