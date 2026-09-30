@@ -22,6 +22,9 @@ Read these only when the task touches their area:
 
 ## Highest Priority Rules
 
+- Keep `README.md` and `README_zh_CN.md` on both `main` and the custom branch current with user-visible changes and releases.
+  Lead with the FlClash 自改版 identity, APK downloads, and fork changes; retain the original upstream README at the bottom.
+  Preserve upstream attribution and the GPL license.
 - When the user explicitly requests a scoped, low-risk change, inspect the relevant context and implement it directly.
   Do not require brainstorming, design documents, implementation plans, multiple-option proposals, or repeated confirmation.
   Ask only when material ambiguity, destructive impact, additional authority, or scope expansion could change the result.
