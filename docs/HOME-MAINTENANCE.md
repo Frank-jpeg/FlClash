@@ -39,7 +39,7 @@ Cargo 和宿主机 C/C++ 链接工具可用。Windows 上的 Rust MSVC 构建脚
 ```sh
 git submodule update --init --recursive
 flutter pub get
-flutter build apk --release --split-per-abi --target-platform android-arm64,android-x64
+flutter build apk --release --dart-define=APP_ENV=stable --split-per-abi --target-platform android-arm64,android-x64
 ```
 
 产物在 `build/app/outputs/flutter-apk/`。两个 `build_assets` 开关必须为 `true`。
@@ -68,7 +68,7 @@ d09e03af6407a2a0041c60bc07055680d4da39861b7a5b3cd82dbcb8c2d1d555
   曾提出的“自改版”更名尚未实施；不能把文档收尾当成已经完成更名。
 - 桌面图标和控制中心快捷磁贴图标保持原样，取消换色或改轮廓的计划。
 - `lib/bootstrap.dart` 的 `APP_ENV` 默认值为 `pre`，`globalState.isPre` 控制红色 `PRE` 标记。
-  Home 构建工作流没有覆盖该值。若发行时决定使用稳定版环境，传入 `--dart-define=APP_ENV=stable`。
+  home.4 起 Home 构建工作流固定传入 `--dart-define=APP_ENV=stable`，去除 PRE 和红色斜条；本机交付构建也需带此参数。
   此标记与 GitHub Release 的 prerelease 字段、密钥告警分别独立。
 
 ## 跟进上游
@@ -138,7 +138,7 @@ gh workflow run publish-home-apk.yml -R Frank-jpeg/FlClash --ref main -f run_id=
   3 项跳过、1 项失败；失败项是旧测试要求应用页搜索框随页面失活消失。`3cc583c` 已将其改为
   常驻搜索及返回行为检查，本机相关 30 项通过；该提交仅改测试，APK 的应用源码与依赖完全不变。
   同次 Android、Go、Rust、插件及 Windows Helper 检查通过；不得将首次完整检查称为全绿。
-  测试适配后的[云端复检](https://github.com/Frank-jpeg/FlClash/actions/runs/36595514462)以该 run 的最终结果为准。
+  测试适配后的[云端复检](https://github.com/Frank-jpeg/FlClash/actions/runs/36595514462)已通过。
 - 前一版 home.2 的[完整检查](https://github.com/Frank-jpeg/FlClash/actions/runs/36576531340)通过，
   [云端签名发布](https://github.com/Frank-jpeg/FlClash/actions/runs/36581215822)曾手动复用成功构建完成。
 - 本机相关 Flutter 测试通过；原生编译检查因 Gradle 下载或离线依赖缺失未完成。
