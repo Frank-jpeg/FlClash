@@ -10,13 +10,13 @@
 | 定制分支 | `feature/android-home-tailscale` |
 | 默认分支 | `main`；首页有定制 APK 直链，尚未合入定制功能 |
 | 上游基线 | `v0.8.98`，发布于 2026-09-14 |
-| 源码应用版本 | `0.8.98-home.3+2026092903` |
-| APK versionCode | ARM64：`2026094903`；x86_64：`2026096903`（Flutter 按 ABI 加偏移） |
+| 源码应用版本 | `0.8.98-home.4+2026093004` |
+| home.4 预期 versionCode | ARM64：`2026095004`；x86_64：`2026097004`（Flutter 按 ABI 加偏移） |
 | Android 包名 | `com.follow.clash.home`；debug 构建另有 `.dev` 后缀 |
 | 已发布 APK 对应代码 | `24225ad0de6c7bdacdb2259f8555ca743de846d4`（home.3） |
 | 更新源修复 | `8cc4ca2`：Fork Release 地址及 home 版本比较 |
 | VPN 提醒修复 | `b9fa81d`：启动快照、双向开关提示及原生停止后重启 |
-| 新包构建提交 | `24225ad`：应用名单常驻搜索框，递增 home/build 版本 |
+| 新包构建提交 | `0b406bb`：home.4 构建指定 stable 环境，去除 PRE 角标 |
 
 home.1（`552585e`）之后，home.2 加入更新源与重启提醒修正，home.3 将应用名单搜索框常驻顶部。
 当前 [v0.8.98-home.3](https://github.com/Frank-jpeg/FlClash/releases/tag/v0.8.98-home.3)
@@ -85,7 +85,7 @@ GitHub 的 Sync fork 不会自动处理定制冲突，也不会保证产物使�
 当前源码通过 `lib/common/constant.dart` 的 `repository` 统一使用 `Frank-jpeg/FlClash`，
 手动及自动检查请求 `/repos/Frank-jpeg/FlClash/releases/latest`，发现新版后打开该 Fork 的下载页。
 版本比较支持前导 `v`、`-home.N` 和数字 build number；发布时递增 home 序号和 Android build number，
-例如 home.3 之后使用 `v0.8.98-home.4`。GitHub Release 应标为正式发布，预发布不会被 `releases/latest` 返回。
+例如 home.4 之后使用 `v0.8.98-home.5`。GitHub Release 应标为正式发布，预发布不会被 `releases/latest` 返回。
 发布时附上固定签名的 APK；上游 `.github/release_template.md` 仍含上游下载地址，不能直接用作定制版下载页。
 home.3 已作为正式 Release 发布；应用没有自动下载安装或自动合并上游的功能。
 
@@ -130,6 +130,9 @@ gh workflow run publish-home-apk.yml -R Frank-jpeg/FlClash --ref main -f run_id=
 
 ## 验证与交接
 
+- home.4 工作流已通过 actionlint；[APK 构建](https://github.com/Frank-jpeg/FlClash/actions/runs/36649994540)
+  和[完整检查](https://github.com/Frank-jpeg/FlClash/actions/runs/36649994510)已触发，提交 `0b406bb`。
+  本次交接时尚未确认发布完成，不能把 home.3 下载包说成已去除 PRE；发布成功后固定 APK 直链自动更新。
 - [home.3 APK 构建](https://github.com/Frank-jpeg/FlClash/actions/runs/36593607481)与
   [自动签名发布](https://github.com/Frank-jpeg/FlClash/actions/runs/36594918515)成功，2026-09-30 00:04（UTC+8）发布。
   来源、固定证书、包名、版本和 ABI 检查通过，tag 指向 `24225ad`；ARM64 直链免登录返回 HTTP 200、APK 类型。
