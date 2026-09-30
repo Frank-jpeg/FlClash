@@ -1,4 +1,4 @@
-# FlClash 首页版（Android）
+# FlClash 自改版（Android）
 
 基于上游正式版 v0.8.98，保留上游 GPL-3.0 许可证。定制版包名为
 `com.follow.clash.home`，可与原版同时安装，两者配置独立。
@@ -9,11 +9,11 @@
 x86_64 模拟器：[直接下载 x86_64 APK](https://github.com/Frank-jpeg/FlClash/releases/latest/download/FlClash-home-x86_64.apk)。
 无需解压或登录 GitHub；仓库首页也提供相同入口。
 
-当前发布版本为 `0.8.98-home.3+2026092903`，源码对应 `24225ad`。Release 中的两个 APK
-沿用首页版固定签名，可覆盖此前固定签名的 home.1/home.2，通常可保留配置。首次使用需自行导入配置或订阅。
+当前发布版本为 `0.8.98-home.4+2026093004`，源码对应 `0b406bb`。Release 中的两个 APK
+沿用首页版固定签名，可覆盖此前固定签名的 home.1～home.3，通常可保留配置。首次使用需自行导入配置或订阅。
 [更新记录与校验文件](https://github.com/Frank-jpeg/FlClash/releases/latest)。
 
-APK 由 [GitHub Actions 自动构建](https://github.com/Frank-jpeg/FlClash/actions/runs/36593607481)，
+APK 由 [GitHub Actions 自动构建](https://github.com/Frank-jpeg/FlClash/actions/runs/36649994540)，
 由 `Publish home APK` 在云端使用原密钥签署并自动发布到 Releases。
 Actions 中的原始 ZIP 使用临时 debug 签名，且有保存期限；日常安装请选择上述 Release APK。
 
@@ -39,6 +39,7 @@ VPN 范围；操作后仍需保存名单。隐藏应用的已有选择不会再�
 
 home.3 起，应用名单顶部常驻搜索框，无需打开“更多”菜单；支持按应用名或包名搜索，
 忽略大小写和首尾空格。点击输入框右侧的清空按钮恢复列表，搜索和清空不会删除已选应用。
+自带浏览器等系统应用搜不到时，打开“应用访问控制 → ⋮ → 设置 → 来源”，点亮“系统应用”后再搜索。
 
 进入 VPN 只表示交给 FlClash 处理，最终是否走代理还取决于订阅规则和节点可用性。
 
@@ -70,7 +71,7 @@ Auth Key 在输入时隐藏；未清空前会随本应用配置保存，导出�
 
 ## 名称、图标与 PRE 标记
 
-安卓应用目前显示为“FlClash 首页版”。桌面图标和控制中心快捷磁贴图标保持原样。
+仓库展示名为“FlClash 自改版”；安卓应用目前仍显示为“FlClash 首页版”。桌面图标和控制中心快捷磁贴图标保持原样。
 home.4 起，Home 自动构建指定 `--dart-define=APP_ENV=stable`，不再显示右上角的 `PRE` 和红色斜条。
 旧版本的角标只是预发布环境标记，和密钥扫描告警无关；需安装 home.4 或更新版本后去除。
 

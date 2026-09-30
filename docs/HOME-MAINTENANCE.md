@@ -13,15 +13,17 @@
 | 源码应用版本 | `0.8.98-home.4+2026093004` |
 | home.4 预期 versionCode | ARM64：`2026095004`；x86_64：`2026097004`（Flutter 按 ABI 加偏移） |
 | Android 包名 | `com.follow.clash.home`；debug 构建另有 `.dev` 后缀 |
-| 已发布 APK 对应代码 | `24225ad0de6c7bdacdb2259f8555ca743de846d4`（home.3） |
+| 已发布 APK 对应代码 | `0b406bb779feaf48b2e4137dd11a578905ff5a30`（home.4） |
 | 更新源修复 | `8cc4ca2`：Fork Release 地址及 home 版本比较 |
 | VPN 提醒修复 | `b9fa81d`：启动快照、双向开关提示及原生停止后重启 |
 | 新包构建提交 | `0b406bb`：home.4 构建指定 stable 环境，去除 PRE 角标 |
 
 home.1（`552585e`）之后，home.2 加入更新源与重启提醒修正，home.3 将应用名单搜索框常驻顶部。
-当前 [v0.8.98-home.3](https://github.com/Frank-jpeg/FlClash/releases/tag/v0.8.98-home.3)
+当前 [v0.8.98-home.4](https://github.com/Frank-jpeg/FlClash/releases/tag/v0.8.98-home.4)
 已由云端构建、使用原密钥签署并自动发布。
 默认分支和定制分支的中英 README 均直接链接 Release APK，无需登录 GitHub 或解压。
+仓库首页统一使用“FlClash 自改版”，先写改版功能和版本记录，原版首页内容放在末尾折叠区。
+每次用户可见功能修改或新版本发布，同步更新两分支的 `README.md` 与 `README_zh_CN.md`。
 Actions artifact 仍是使用临时 debug 签名的原始构建产物，与固定签名的 Release APK 分开。
 使用 `gh` 时显式指定 `-R Frank-jpeg/FlClash`，避免 Fork 环境默认查询上游仓库。
 
@@ -87,7 +89,7 @@ GitHub 的 Sync fork 不会自动处理定制冲突，也不会保证产物使�
 版本比较支持前导 `v`、`-home.N` 和数字 build number；发布时递增 home 序号和 Android build number，
 例如 home.4 之后使用 `v0.8.98-home.5`。GitHub Release 应标为正式发布，预发布不会被 `releases/latest` 返回。
 发布时附上固定签名的 APK；上游 `.github/release_template.md` 仍含上游下载地址，不能直接用作定制版下载页。
-home.3 已作为正式 Release 发布；应用没有自动下载安装或自动合并上游的功能。
+home.4 已作为正式 Release 发布；应用没有自动下载安装或自动合并上游的功能。
 
 ## 在线发布与排障
 
@@ -131,8 +133,9 @@ gh workflow run publish-home-apk.yml -R Frank-jpeg/FlClash --ref main -f run_id=
 ## 验证与交接
 
 - home.4 工作流已通过 actionlint；[APK 构建](https://github.com/Frank-jpeg/FlClash/actions/runs/36649994540)
-  和[完整检查](https://github.com/Frank-jpeg/FlClash/actions/runs/36649994510)已触发，提交 `0b406bb`。
-  本次交接时尚未确认发布完成，不能把 home.3 下载包说成已去除 PRE；发布成功后固定 APK 直链自动更新。
+  和[完整检查](https://github.com/Frank-jpeg/FlClash/actions/runs/36649994510)通过，提交 `0b406bb`。
+  [自动签名发布](https://github.com/Frank-jpeg/FlClash/actions/runs/36650986937)成功，2026-09-30 08:34（UTC+8）发布；
+  固定 APK 直链已指向 home.4。代码通过 stable 环境去除角标，手机界面仍由用户验收。
 - [home.3 APK 构建](https://github.com/Frank-jpeg/FlClash/actions/runs/36593607481)与
   [自动签名发布](https://github.com/Frank-jpeg/FlClash/actions/runs/36594918515)成功，2026-09-30 00:04（UTC+8）发布。
   来源、固定证书、包名、版本和 ABI 检查通过，tag 指向 `24225ad`；ARM64 直链免登录返回 HTTP 200、APK 类型。
