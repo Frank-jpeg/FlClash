@@ -4,9 +4,11 @@ import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/providers/providers.dart';
 import 'package:fl_clash/ui/icons/icons.dart';
 import 'package:fl_clash/ui/ui.dart';
+import 'package:fl_clash/views/dashboard/widgets/card.dart';
 import 'package:fl_clash/widgets/widgets.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:prism_ui/banner.dart';
 
 /// Entry row for the Tailscale settings, opened as a page from the dashboard.
 class TailscaleCard extends ConsumerWidget {
@@ -15,11 +17,25 @@ class TailscaleCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(tailscaleSettingProvider);
-    return ListItem.open(
-      leading: const GlyphIcon(AppGlyphs.devices),
-      title: const Text('Tailscale 内网'),
-      subtitle: Text(settings.enable ? '已启用 · ${settings.hostname}' : '未启用'),
-      widget: const TailscaleView(),
+    return DashboardCard(
+      semanticLabel: 'Tailscale 内网',
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const DashboardCardHeader(
+            glyph: AppGlyphs.devices,
+            title: 'Tailscale 内网',
+          ),
+          const SizedBox(height: 8),
+          ListItem.open(
+            title: Text(settings.enable ? '已启用' : '未启用'),
+            subtitle: Text(settings.hostname),
+            minVerticalPadding: 8,
+            widget: const TailscaleView(),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -70,7 +86,7 @@ class _TailscaleViewState extends ConsumerState<TailscaleView> {
   Future<void> _save() async {
     if (_saving) return;
     if (!_validSubnets()) {
-      dialogs.showNotifier('子网格式不对，应为 192.168.1.0/24 这种写法', level: MessageLevel.error);
+      dialogs.showBanner('子网格式不对，应为 192.168.1.0/24 这种写法', level: BannerLevel.error);
       return;
     }
     setState(() => _saving = true);
@@ -98,10 +114,10 @@ class _TailscaleViewState extends ConsumerState<TailscaleView> {
           throw MessageException('Tailscale 配置没能应用，请重试');
         }
       }
-      if (mounted) dialogs.showNotifier('Tailscale 设置已保存');
+      if (mounted) dialogs.showBanner('Tailscale 设置已保存');
     } catch (error) {
       if (mounted) {
-        dialogs.showNotifier(error.toString(), level: MessageLevel.error);
+        dialogs.showBanner(error.toString(), level: BannerLevel.error);
       }
     } finally {
       if (mounted) setState(() => _saving = false);
@@ -146,10 +162,9 @@ class _TailscaleViewState extends ConsumerState<TailscaleView> {
               ),
               FormRow(
                 title: const Text('子网路由'),
-                subtitle: const Text('每行一个，如 192.168.1.0/24'),
                 trailing: FormRowTextField(
                   controller: _subnets,
-                  hintText: '192.168.1.0/24',
+                  hintText: '192.168.1.0/24，多个用换行或逗号分开',
                   autocorrect: false,
                   textInputAction: TextInputAction.done,
                 ),
