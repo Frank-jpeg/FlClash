@@ -108,7 +108,11 @@ class Request {
   Future<Map<String, dynamic>?> checkForUpdate() async {
     final release = await latestRelease();
     final remoteVersion = release['tag_name'] as String;
-    final version = globalState.packageInfo.version;
+    // The fork's tags carry the home build in the build number (v0.9.3+5001),
+    // while the installed app reports the version and the build apart.
+    final packageInfo = globalState.packageInfo;
+    final baseVersion = packageInfo.version.split('-').first;
+    final version = '$baseVersion+${packageInfo.buildNumber}';
     final hasUpdate =
         compareVersions(remoteVersion.replaceAll('v', ''), version) > 0;
     return hasUpdate ? release : null;

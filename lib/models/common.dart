@@ -48,9 +48,11 @@ extension PackagesExt on List<Package> {
     required bool isFilterNonInternetApp,
   }) {
     return where(
-      (item) =>
-          (isFilterSystemApp ? item.system == false : true) &&
-          (isFilterNonInternetApp ? item.internet == true : true),
+      (item) => showAccessControlPackage(
+        item,
+        filterSystem: isFilterSystemApp,
+        filterOffline: isFilterNonInternetApp,
+      ),
     );
   }
 

@@ -458,7 +458,9 @@ enum DashboardWidget {
   proxyGroups,
   connectionStats,
   intranetIp,
-  memoryInfo;
+  memoryInfo,
+  accessControl(platforms: [SupportPlatform.Android]),
+  tailscale(platforms: [SupportPlatform.Android]);
 
   final List<SupportPlatform> platforms;
 

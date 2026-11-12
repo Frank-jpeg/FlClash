@@ -108,6 +108,7 @@ Config _config(Ref ref) {
   final proxiesStyleProps = ref.watch(proxiesStyleSettingProvider);
   final patchClashConfig = ref.watch(patchClashConfigProvider);
   final excludeSSIDs = ref.watch(excludeSSIDsProvider);
+  final tailscale = ref.watch(tailscaleSettingProvider);
   return Config(
     appSettingProps: appSettingProps,
     windowProps: windowProps,
@@ -120,6 +121,7 @@ Config _config(Ref ref) {
     proxiesStyleProps: proxiesStyleProps,
     patchClashConfig: patchClashConfig,
     excludeSSIDs: excludeSSIDs,
+    tailscale: tailscale,
   );
 }
 
@@ -137,6 +139,7 @@ void writeConfig(Ref ref, Config config) {
   ref.read(patchClashConfigProvider.notifier).value = config.patchClashConfig
       .ensureControllerSecret();
   ref.read(excludeSSIDsProvider.notifier).value = config.excludeSSIDs;
+  ref.read(tailscaleSettingProvider.notifier).value = config.tailscale;
 }
 
 List<Override> buildConfigOverrides(Config config) {
@@ -158,5 +161,13 @@ List<Override> buildConfigOverrides(Config config) {
       (_, _) => config.patchClashConfig,
     ),
     excludeSSIDsProvider.overrideWithBuild((_, _) => config.excludeSSIDs),
+    tailscaleSettingProvider.overrideWithBuild((_, _) => config.tailscale),
   ];
+}
+
+@riverpod
+class TailscaleSetting extends _$TailscaleSetting
+    with AutoDisposeNotifierMixin {
+  @override
+  TailscaleProps build() => const TailscaleProps();
 }

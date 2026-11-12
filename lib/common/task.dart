@@ -380,6 +380,16 @@ Future<RealProfile> _makeRealProfileTask(MakeRealProfileState data) async {
         .toList();
   }
   rawConfig['rules'] = [...mitm.rules, ...rules];
+  final tailscaleProps = data.tailscale;
+  if (tailscaleProps.enable) {
+    final routed = applyTailscaleConfig(
+      Map<String, dynamic>.from(rawConfig),
+      tailscaleProps,
+    );
+    rawConfig
+      ..clear()
+      ..addAll(routed);
+  }
   final yaml = await _encodeYaml(Map<String, dynamic>.from(rawConfig));
   return (yaml: yaml, md5: yaml.toMd5(), counts: configCountsOf(rawConfig));
 }

@@ -215,6 +215,7 @@ abstract class MakeRealProfileState with _$MakeRealProfileState {
     String? matchTarget,
     @Default(false) bool safeMode,
     @Default([]) List<MitmModuleSource> mitmModules,
+    @Default(TailscaleProps()) TailscaleProps tailscale,
   }) = _MakeRealProfileState;
 }
 

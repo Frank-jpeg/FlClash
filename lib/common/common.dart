@@ -1,6 +1,8 @@
+export 'access_control.dart';
 export 'app_localizations.dart';
 export 'app_ports.dart';
 export 'app_update.dart';
+export 'tailscale.dart';
 export 'backup.dart';
 export 'changelog.dart';
 export 'cidr.dart';

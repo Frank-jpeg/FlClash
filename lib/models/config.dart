@@ -129,6 +129,8 @@ final List<DashboardWidget> platformDefaultDashboardWidgets = system.isAndroid
         DashboardWidget.currentOutbound,
         DashboardWidget.networkSpeed,
         DashboardWidget.outboundMode,
+        DashboardWidget.accessControl,
+        DashboardWidget.tailscale,
         DashboardWidget.profiles,
         DashboardWidget.proxyGroups,
       ]
@@ -519,6 +521,7 @@ abstract class Config with _$Config {
     WindowProps windowProps,
     @Default(defaultClashConfig) PatchClashConfig patchClashConfig,
     @Default([]) List<String> excludeSSIDs,
+    @Default(TailscaleProps()) TailscaleProps tailscale,
   }) = _Config;
 
   factory Config.fromJson(Map<String, Object?> json) =>
@@ -601,4 +604,19 @@ Map<String, Object?> _withLegacyRouteMode(Map<String, Object?> json) {
         'tun': {...Map<String, Object?>.from(tun), 'route-address': <String>[]},
       },
   };
+}
+
+/// A user's Tailscale settings: the transport itself comes from the core, so
+/// this only holds what the player fills in plus the subnets to route.
+@freezed
+abstract class TailscaleProps with _$TailscaleProps {
+  const factory TailscaleProps({
+    @Default(false) bool enable,
+    @Default('flclash-home') String hostname,
+    @Default('') String authKey,
+    @Default([]) List<String> subnets,
+  }) = _TailscaleProps;
+
+  factory TailscaleProps.fromJson(Map<String, Object?> json) =>
+      _$TailscalePropsFromJson(json);
 }
