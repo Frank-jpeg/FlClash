@@ -382,13 +382,23 @@ Future<RealProfile> _makeRealProfileTask(MakeRealProfileState data) async {
   rawConfig['rules'] = [...mitm.rules, ...rules];
   final tailscaleProps = data.tailscale;
   if (tailscaleProps.enable) {
-    final routed = applyTailscaleConfig(
-      Map<String, dynamic>.from(rawConfig),
-      tailscaleProps,
-    );
-    rawConfig
-      ..clear()
-      ..addAll(routed);
+    // The core writes its tailscale state under this directory, so it has to be
+    // an absolute, writable path: a relative one made the whole config fail.
+    final tailscaleStateDir = join(data.profilesPath, 'tailscale');
+    try {
+      Directory(tailscaleStateDir).createSync(recursive: true);
+      final routed = applyTailscaleConfig(
+        Map<String, dynamic>.from(rawConfig),
+        tailscaleProps,
+        stateDir: tailscaleStateDir,
+      );
+      rawConfig
+        ..clear()
+        ..addAll(routed);
+    } catch (error) {
+      // A broken tailscale entry must not take every other proxy with it.
+      commonPrint.log('tailscale config skipped: $error');
+    }
   }
   final yaml = await _encodeYaml(Map<String, dynamic>.from(rawConfig));
   return (yaml: yaml, md5: yaml.toMd5(), counts: configCountsOf(rawConfig));

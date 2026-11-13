@@ -36,8 +36,9 @@ bool isTailscaleSubnet(String value) {
 /// through it.
 Map<String, dynamic> applyTailscaleConfig(
   Map<String, dynamic> config,
-  TailscaleProps settings,
-) {
+  TailscaleProps settings, {
+  required String stateDir,
+}) {
   if (!settings.enable) return config;
   if (settings.subnets.any((subnet) => !isTailscaleSubnet(subnet))) {
     throw const FormatException('Invalid Tailscale subnet');
@@ -56,7 +57,7 @@ Map<String, dynamic> applyTailscaleConfig(
     'type': 'tailscale',
     'hostname': settings.hostname,
     if (settings.authKey.isNotEmpty) 'auth-key': settings.authKey,
-    'state-dir': 'tailscale/flclash-home',
+    'state-dir': stateDir,
     'accept-routes': true,
     'udp': true,
   });
