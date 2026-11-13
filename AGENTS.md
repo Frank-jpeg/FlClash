@@ -10,9 +10,10 @@ This file is the entry point for AI coding agents working in this repository. Ke
 
 Rules specific to this branch:
 
-- The version stays `0.9.3-home.N+<build>`, and `<build>` must stay above the previous release's
-  number. Android compares `versionCode`, not the version name: 5001 was refused as a downgrade
-  from home.4's `2026093004` (install error `-25`).
+- The version is `<major>.<minor>.<patch>+<build>`, and `<build>` must stay above the previous
+  release's number. Android compares `versionCode`, not the version name: `5001` was refused as a
+  downgrade from the old `2026095004` (install error `-25`). Use a date-style build number
+  (`2026111401`); Flutter adds the ABI offset on top of it.
 - `Build home APK` runs `build_runner` before `flutter build`. `TailscaleProps` is a new freezed
   type with no committed generated file, so skipping that step fails with
   `Type 'TailscaleProps' not found`.

@@ -6,7 +6,7 @@
 
 **下载**：[ARM64 APK](https://github.com/Frank-jpeg/FlClash/releases/latest/download/FlClash-home-arm64-v8a.apk) · [x86_64 APK](https://github.com/Frank-jpeg/FlClash/releases/latest/download/FlClash-home-x86_64.apk) · [版本记录与校验](https://github.com/Frank-jpeg/FlClash/releases/latest)
 
-当前版本 `0.9.3-home.5+2026111305`。Release 里的 APK 由云端使用首页版固定密钥签名，可覆盖安装旧版 `0.8.98-home.*`，配置通常保留。
+当前版本 `2.0.0+2026111401`（基于上游 v0.9.3）。Release 里的 APK 由云端使用首页版固定密钥签名，可覆盖安装旧版 `0.8.98-home.*`，配置通常保留。
 
 ### 相比官方版多出的功能
 

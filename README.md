@@ -6,7 +6,7 @@
 
 **Download**: [ARM64 APK](https://github.com/Frank-jpeg/FlClash/releases/latest/download/FlClash-home-arm64-v8a.apk) · [x86_64 APK](https://github.com/Frank-jpeg/FlClash/releases/latest/download/FlClash-home-x86_64.apk) · [Releases](https://github.com/Frank-jpeg/FlClash/releases/latest)
 
-Current version `0.9.3-home.5+2026111305`.
+Current version `2.0.0+2026111401` (on top of upstream v0.9.3).
 
 What this fork adds: a per-app VPN switch on the dashboard, Google components kept visible in the app list, Tailscale private-network settings with subnet routing, and update checks pointed at this repository.
 
