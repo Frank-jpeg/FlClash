@@ -145,7 +145,7 @@ class _TailscaleViewState extends ConsumerState<TailscaleView> {
                 ),
               ),
               FormRow(
-                title: const Text('设备名'),
+                title: '设备名',
                 trailing: FormRowTextField(
                   controller: _hostname,
                   hintText: 'flclash-home',
@@ -154,7 +154,7 @@ class _TailscaleViewState extends ConsumerState<TailscaleView> {
                 ),
               ),
               FormRow(
-                title: const Text('Auth Key'),
+                title: 'Auth Key',
                 trailing: FormRowSecretTextField(
                   controller: _authKey,
                   hintText: 'tskey-auth-…（可留空用交互登录）',
@@ -162,7 +162,7 @@ class _TailscaleViewState extends ConsumerState<TailscaleView> {
                 ),
               ),
               FormRow(
-                title: const Text('子网路由'),
+                title: '子网路由',
                 trailing: FormRowTextField(
                   controller: _subnets,
                   hintText: '192.168.1.0/24，多个用换行或逗号分开',
