@@ -1,4 +1,5 @@
 import 'package:fl_clash/common/common.dart';
+import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/features/form/form.dart';
 import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/providers/providers.dart';
@@ -6,6 +7,7 @@ import 'package:fl_clash/ui/icons/icons.dart';
 import 'package:fl_clash/ui/ui.dart';
 import 'package:fl_clash/views/dashboard/widgets/card.dart';
 import 'package:fl_clash/widgets/widgets.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:prism_ui/banner.dart';
@@ -156,7 +158,6 @@ class _TailscaleViewState extends ConsumerState<TailscaleView> {
                 trailing: FormRowSecretTextField(
                   controller: _authKey,
                   hintText: 'tskey-auth-…（可留空用交互登录）',
-                  autocorrect: false,
                   textInputAction: TextInputAction.next,
                 ),
               ),

@@ -4,6 +4,7 @@ import 'package:prism_ui/color.dart';
 
 import 'app.dart';
 import 'clash_config.dart';
+import 'config.dart';
 import 'common.dart';
 import 'core.dart';
 import 'profile.dart';
