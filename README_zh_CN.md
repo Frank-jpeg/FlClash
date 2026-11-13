@@ -1,3 +1,28 @@
+## FlClash 安卓首页版（自改版）
+
+> **本仓库是 [Frank-jpeg](https://github.com/Frank-jpeg) 维护的 Android 自改版，基于上游 [chen08209/FlClash](https://github.com/chen08209/FlClash) v0.9.3，不是官方发行版。**
+>
+> 包名 `com.follow.clash.home`，可与官方版同时安装，配置互相独立。许可证 GPL-3.0，版权与署名归原作者及其依赖项目。
+
+**下载**：[ARM64 APK](https://github.com/Frank-jpeg/FlClash/releases/latest/download/FlClash-home-arm64-v8a.apk) · [x86_64 APK](https://github.com/Frank-jpeg/FlClash/releases/latest/download/FlClash-home-x86_64.apk) · [版本记录与校验](https://github.com/Frank-jpeg/FlClash/releases/latest)
+
+当前版本 `0.9.3-home.5+2026111305`。Release 里的 APK 由云端使用首页版固定密钥签名，可覆盖安装旧版 `0.8.98-home.*`，配置通常保留。
+
+### 相比官方版多出的功能
+
+| 改动 | 说明 |
+| --- | --- |
+| 首页分应用控制 | 仪表盘上直接开关「应用访问控制」并一键进入应用名单；官方把入口放在工具页。 |
+| Google 组件常显 | 隐藏系统应用时仍显示已安装的 Play 商店、Play 服务、服务框架和下载管理器，可一键加入 VPN 范围。 |
+| Tailscale 内网 | 应用内配置 tailnet 设备名、Auth Key 与子网路由，直接访问家里 NAS 或公司电脑。官方没有这个入口。 |
+| 自改版更新源 | 应用内检查更新指向本仓库。 |
+
+### 上游已实现、本改版不再重复维护
+
+应用列表搜索（官方已在标题栏提供）、过滤后保留已选应用（0.9.3 已修复）、配置变更重启提醒（0.9.3 重写了 `vpn_manager`）。这些跟随上游即可。
+
+---
+
 <div align="center">
 
 <img src="assets/images/icon.png" alt="FlClash" width="88">

@@ -1,3 +1,21 @@
+## FlClash Android Home edition (personal fork)
+
+> **Maintained by [Frank-jpeg](https://github.com/Frank-jpeg), based on upstream [chen08209/FlClash](https://github.com/chen08209/FlClash) v0.9.3. Not an official release.**
+>
+> Application id `com.follow.clash.home`, so it installs beside the official app. GPL-3.0, credit stays with the upstream authors.
+
+**Download**: [ARM64 APK](https://github.com/Frank-jpeg/FlClash/releases/latest/download/FlClash-home-arm64-v8a.apk) · [x86_64 APK](https://github.com/Frank-jpeg/FlClash/releases/latest/download/FlClash-home-x86_64.apk) · [Releases](https://github.com/Frank-jpeg/FlClash/releases/latest)
+
+Current version `0.9.3-home.5+2026111305`.
+
+What this fork adds: a per-app VPN switch on the dashboard, Google components kept visible in the app list, Tailscale private-network settings with subnet routing, and update checks pointed at this repository.
+
+Upstream already covers app search, keeping hidden selections, and the restart hint, so this fork leaves those to upstream.
+
+Chinese notes: [README_zh_CN.md](README_zh_CN.md).
+
+---
+
 <div align="center">
 
 <img src="assets/images/icon.png" alt="FlClash" width="88">

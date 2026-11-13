@@ -3,6 +3,22 @@
 This file is the entry point for AI coding agents working in this repository. Keep it small: detailed guidance lives under
 `.agents/`, and discoverable repo skills live under `.agents/skills/*/SKILL.md`.
 
+## This is the Android home edition branch
+
+`upgrade/v0.9.3` carries a personal Android fork on top of upstream v0.9.3. Read
+[docs/HOME-ANDROID.md](docs/HOME-ANDROID.md) before changing anything here.
+
+Rules specific to this branch:
+
+- The version stays `0.9.3-home.N+<build>`, and `<build>` must stay above the previous release's
+  number. Android compares `versionCode`, not the version name: 5001 was refused as a downgrade
+  from home.4's `2026093004` (install error `-25`).
+- `Build home APK` runs `build_runner` before `flutter build`. `TailscaleProps` is a new freezed
+  type with no committed generated file, so skipping that step fails with
+  `Type 'TailscaleProps' not found`.
+- The fork differs only in the files listed in [docs/HOME-ANDROID.md](docs/HOME-ANDROID.md).
+- Do not rebase onto a new upstream tag. Re-apply those files instead.
+
 ## Start Here
 
 Read these files before making changes:
