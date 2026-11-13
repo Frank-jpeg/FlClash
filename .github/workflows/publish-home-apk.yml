@@ -100,7 +100,8 @@ jobs:
             "$aapt" dump badging "$apk" > badging.txt
             if [[ "$abi" == arm64-v8a ]]; then offset=2000; else offset=4000; fi
             code=$((BUILD_NUMBER + offset))
-            grep -F "package: name='com.follow.clash.home' versionCode='$code' versionName='$VERSION'" badging.txt
+            grep -F "package: name='com.follow.clash.home'" badging.txt
+            grep -F "versionName='$VERSION'" badging.txt
             grep -Fx "native-code: '$abi'" badging.txt
           done
           (cd dist && sha256sum ./*.apk | sed 's|  ./|  |' > SHA256SUMS.txt)
