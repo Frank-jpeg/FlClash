@@ -4,7 +4,7 @@ on:
   workflow_run:
     workflows: ['Build home APK']
     types: [completed]
-    branches: ['feature/android-home-tailscale']
+    branches: ['upgrade/v0.9.3']
   workflow_dispatch:
     inputs:
       run_id:
@@ -40,7 +40,7 @@ jobs:
           jq -e --arg repo "$GITHUB_REPOSITORY" '
             .status == "completed" and .conclusion == "success" and
             .head_repository.full_name == $repo and
-            .head_branch == "feature/android-home-tailscale" and
+            .head_branch == "upgrade/v0.9.3" and
             .path == ".github/workflows/build-home-apk.yml" and
             (.event == "push" or .event == "workflow_dispatch")
           ' run.json > /dev/null
@@ -132,7 +132,7 @@ jobs:
 
           构建：https://github.com/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN_ID
           源码：$SOURCE_SHA（保留上游 GPL-3.0 许可证与署名）
-          使用说明：https://github.com/$GITHUB_REPOSITORY/blob/feature/android-home-tailscale/docs/HOME-ANDROID.md
+          使用说明：https://github.com/$GITHUB_REPOSITORY/blob/upgrade/v0.9.3/docs/HOME-ANDROID.md
           EOF
             gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --target "$SOURCE_SHA" \
               --draft --title "FlClash 安卓首页版 $VERSION" --notes-file notes.md
