@@ -196,6 +196,33 @@ func TestLoadConfigWithBasePutsTheAddedRulesFirstAndTheOverlayOverTheRest(t *tes
 	}
 }
 
+// The host adds an outbound of its own to the overlay (the tailscale one) and
+// points rules at it, so the profile's list must not swallow it.
+func TestLoadConfigWithBaseKeepsAnOverlayProxyTheProfileLacks(t *testing.T) {
+	path := writeBaseProfile(t, baseProfile)
+	base, err := handleGetProfileBase(PathParams{Path: path})
+	if err != nil {
+		t.Fatalf("handleGetProfileBase = %v", err)
+	}
+	overlay := overlayOf(t, base, []string{"DOMAIN-SUFFIX,ts.net,added"}, map[string]any{
+		"proxies": []any{
+			map[string]any{"name": "added", "type": "socks5", "server": "127.0.0.1", "port": 1080},
+		},
+	})
+	configPath := filepath.Join(t.TempDir(), "config.yaml")
+
+	cfg, err := loadConfigWithBase(&SetupBase{Path: path, Overlay: overlay}, configPath)
+
+	if err != nil {
+		t.Fatalf("loadConfigWithBase = %v", err)
+	}
+	for _, name := range []string{"a", "b", "g", "added"} {
+		if cfg.Proxies[name] == nil {
+			t.Errorf("proxy %s is missing", name)
+		}
+	}
+}
+
 // The Android service and mihomo's controller reload config.yaml without the
 // profile, and the anchor it was written with sits in a section the overlay drops.
 func TestLoadConfigWithBaseWritesAConfigThatLoadsAlone(t *testing.T) {

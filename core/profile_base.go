@@ -142,9 +142,20 @@ func mergeProfileBase(base *SetupBase) (*yaml.Node, error) {
 		return nil, err
 	}
 	for _, key := range profileBaseSections {
-		if value := mappingValue(profile, key); value != nil {
-			setMappingValue(root, key, value)
+		value := mappingValue(profile, key)
+		if value == nil {
+			continue
 		}
+		if key == "proxies" {
+			merged, err := mergeProxies(mappingValue(root, key), value)
+			if err != nil {
+				return nil, err
+			}
+			if merged != nil {
+				value = merged
+			}
+		}
+		setMappingValue(root, key, value)
 	}
 	rules, err := appendRules(mappingValue(root, "rules"), mappingValue(profile, "rules"))
 	if err != nil {
@@ -235,6 +246,46 @@ func appendRules(added, profile *yaml.Node) (*yaml.Node, error) {
 	}
 	content := make([]*yaml.Node, 0, len(added.Content)+len(profile.Content))
 	content = append(append(content, added.Content...), profile.Content...)
+	return &yaml.Node{Kind: yaml.SequenceNode, Tag: "!!seq", Content: content}, nil
+}
+
+// The profile owns the proxies it lists, but the overlay may carry one the
+// host generated itself (the tailscale outbound); dropping it left its rules
+// pointing at nothing, which failed the whole config.
+func mergeProxies(added, profile *yaml.Node) (*yaml.Node, error) {
+	added, profile = resolveAlias(added), resolveAlias(profile)
+	if added == nil || isNull(added) ||
+		(added.Kind == yaml.SequenceNode && len(added.Content) == 0) {
+		return nil, nil
+	}
+	if profile == nil || isNull(profile) {
+		return nil, nil
+	}
+	if added.Kind != yaml.SequenceNode || profile.Kind != yaml.SequenceNode {
+		return nil, fmt.Errorf("line %d: proxies must be a list", profile.Line)
+	}
+	names := make(map[string]struct{}, len(profile.Content))
+	for _, proxy := range profile.Content {
+		if name := mappingValue(resolveAlias(proxy), "name"); name != nil {
+			names[name.Value] = struct{}{}
+		}
+	}
+	content := make([]*yaml.Node, 0, len(profile.Content)+len(added.Content))
+	content = append(content, profile.Content...)
+	for _, proxy := range added.Content {
+		name := mappingValue(resolveAlias(proxy), "name")
+		if name == nil {
+			continue
+		}
+		if _, exists := names[name.Value]; exists {
+			continue
+		}
+		names[name.Value] = struct{}{}
+		content = append(content, proxy)
+	}
+	if len(content) == len(profile.Content) {
+		return nil, nil
+	}
 	return &yaml.Node{Kind: yaml.SequenceNode, Tag: "!!seq", Content: content}, nil
 }
 
