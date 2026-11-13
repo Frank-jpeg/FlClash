@@ -131,7 +131,10 @@ class _TailscaleViewState extends ConsumerState<TailscaleView> {
     return Scaffold(
       title: 'Tailscale 内网',
       body: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: EdgeInsets.only(
+          top: context.contentTopPadding,
+          bottom: context.bottomInset,
+        ),
         children: [
           generateSection(
             items: [
